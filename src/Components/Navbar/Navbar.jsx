@@ -65,13 +65,13 @@ const Navbar = (children) => {
                   <i className="bx bx-envelope"></i>
                   <span className="mx-2">Mail</span>
                 </a>
-                <a href="/mails" className="nav-link">
+                <a href="/slideshow" className="nav-link">
                   <i className="bx bx-slideshow"></i>
                   <span className="mx-2">Slideshow</span>
                 </a>
-                <a href="/notifications" className="nav-link">
-                  <i className="bx bx-bell-plus"></i>
-                  <span className="mx-2">Notifications</span>
+                <a href="/chat" className="nav-link">
+                  <i className="bx bx-chat"></i>
+                  <span className="mx-2">Chat</span>
                 </a>
                 <a href="/cart" className="nav-link">
                   <i className="bx bxs-report"></i>
@@ -96,11 +96,11 @@ const Navbar = (children) => {
           
           
         </ul>
-        <span href="#" className="nav-link h4 w-100 mb-5">
+        {/* <span href="#" className="nav-link h4 w-100 mb-5">
           <a href="https://www.instagram.com"><i className="bx bxl-instagram-alt text-white"></i></a>
           <a href="https://www.instagram.com"><i className="bx bxl-twitter px-2 text-white"></i></a>
           <a href="https://www.instagram.com"><i className="bx bxl-facebook text-white"></i></a>
-        </span>
+        </span> */}
       </div>
 
       <div className={`p-1 my-container ${sidebarActive ? 'active-cont' : ''}`}>

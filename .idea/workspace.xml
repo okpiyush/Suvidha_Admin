@@ -2,15 +2,31 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a9de5766-85ba-480f-b9ca-12f1ed7b4053" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/public/Logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Components/Logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Components/Modals/AddSlideMoal.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Components/Modals/NewAnnouncement.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Components/Modals/SeeAnnouncements.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Pages/Chat/Chat.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.test.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reportWebVitals.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/setupTests.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Homey/Graph.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Homey/Graph.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Homey/Homey.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Homey/Homey.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Homey/chart.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Homey/chart.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Modals/SendSingleEmail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Modals/SendSingleEmail.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Modals/SuccessModel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Modals/SuccessModel.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Navbar/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Navbar/Navbar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/Welcome.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Welcome.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Context/LoginContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Context/LoginContext.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Announcements/Announcement.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Announcements/Announcement.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Home/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Home/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Mail/Mails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Mail/Mails.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Order/Orders.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Order/Orders.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Product/Products.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Product/Products.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Profile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Slideshow/Slideshow.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Slideshow/Slideshow.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/User/Users.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/User/Users.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

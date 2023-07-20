@@ -11,6 +11,9 @@ const Div=styled.div`
   padding-top:30px;
 `
 const Li=styled.li`
+  border-radius:3px 0px 0px 3px;
+  border-left:3px solid rgb(107, 60, 192) ;
+  margin:5px;
 display:flex;
   height:70px;
   ${'' /* width:700px; */}
@@ -44,7 +47,7 @@ const Button=styled.a`
 }
 `
 export const Users = () => {
-  const url="http://localhost:5001/api/users";
+  const url="https://businessmanagementsolutionapi.onrender.com/api/users";
   const [loading,setLoading]=useState(true);
   const {loginData} = useContext(LoginContext);
   const[data,setData]=useState();
@@ -122,7 +125,7 @@ export const User = () => {
   const {id}=useParams();
   const [disabled,setDisabled]=useState(false);
   const [user,setUser]=useState({});
-  const url=`http://localhost:5001/api/users/find/${id}`
+  const url=`https://businessmanagementsolutionapi.onrender.com/api/users/find/${id}`
   const {loginData}=useContext(LoginContext);
   const [loading,setLoading]=useState(true);
   const getuser=useHook(url,loginData.accessToken);

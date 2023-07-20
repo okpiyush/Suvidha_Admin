@@ -15,7 +15,10 @@ const Div=styled.div`
   padding-top:30px;
 `
 const Li=styled.li`
-display:flex;
+  border-radius:3px 0px 0px 3px;
+  border-left:3px solid rgb(107, 60, 192) ;
+  margin:5px;
+  display:flex;
   height:70px;
   ${'' /* width:700px; */}
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -96,7 +99,7 @@ justify-content:right;
 
 
 const Mails = () => {
-  const url = 'http://localhost:5001/api/mail/getmails/';
+  const url = 'https://businessmanagementsolutionapi.onrender.com/api/mail/getmails/';
   const [loading, setLoading] = useState(true);
   const { loginData } = useContext(LoginContext);
   const [showModal, setShowModal] = useState(false);
@@ -168,7 +171,7 @@ const Mails = () => {
   //for deletion of a  mail 
   const handleDelete =async (index) => {
     console.log(index);
-    const url=`http://localhost:5001/api/mail/delete/${index}`
+    const url=`https://businessmanagementsolutionapi.onrender.com/api/mail/delete/${index}`
     try{
       const response=await axios.delete(url);
       console.log(response.data); 

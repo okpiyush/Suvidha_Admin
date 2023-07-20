@@ -11,6 +11,8 @@ import Profile from './Pages/Profile';
 import Product from './Pages/Product/Product';
 import Mails from './Pages/Mail/Mails';
 import Announcement from './Pages/Announcements/Announcement';
+import Slideshow from "./Pages/Slideshow/Slideshow";
+import Chat from "./Pages/Chat/Chat";
 function App() {
   return (
     <div>
@@ -25,10 +27,12 @@ function App() {
             <Route path="users" element={<Users/>}/>
             <Route path="orders" element={<Orders/>}/>
             <Route path="users/:id" element={<User/>}/>
-          
+            <Route path="slideshow" element={<Slideshow/>}/>
+            <Route path="chat" element={<Chat/>}/>
             <Route path="login" element={<Login/>}/>
             <Route path="announcements" element={<Announcement/>}/>
             <Route path="profile" element={<Profile/>}/>
+
             {/* path to direct to home if anything wierd happends */}
             <Route path="*" element={<Navigate to="/" />} />
           </Route>

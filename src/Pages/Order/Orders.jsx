@@ -94,7 +94,7 @@ justify-content:right;
 
 
 const Orders = () => {
-  const url = 'http://localhost:5001/api/order/';
+  const url = 'https://businessmanagementsolutionapi.onrender.com/api/order/';
   const [loading, setLoading] = useState(true);
   const { loginData } = useContext(LoginContext);
   const [showModal, setShowModal] = useState(false);
@@ -137,7 +137,7 @@ const Orders = () => {
   }
   const handleDelete =async (index) => {
     console.log(index);
-    const url=`http://localhost:5001/api/products/${index}`
+    const url=`https://businessmanagementsolutionapi.onrender.com/api/products/${index}`
     try{
       const headers={
         "token":`Bearer ${loginData.accessToken}`
@@ -170,8 +170,9 @@ const Orders = () => {
           </Deev>
           <Ul>
           <Li key={1}>
-                <Information width="150px">Order Id</Information>
-                <Information width="220px">Amount</Information> 
+                <Information width="180px">Order Id</Information>
+                <Information width="220px">UserID</Information> 
+                <Information width="180px">Amount</Information> 
                 <Information width="220px">Address</Information> 
                 <Information width="220px">Status</Information> 
                 <Information>Date</Information>
@@ -181,8 +182,9 @@ const Orders = () => {
           </Li>
             {data.map((item) => (
               <Li key={item.id}>
-                <Information width="150px">{item.userId}</Information>
-                <Information width="220px">₹{item.amount}</Information> 
+                <Information width="180px">{item._id}</Information>
+                <Information width="220px">{item.userId}</Information>
+                <Information width="180px">₹{item.amount}</Information> 
                 <Information width="220px">{item.address.substring(0,8)}</Information> 
                 <Information width="220px">{item.status}</Information> 
                 <Information>{item.createdAt.substring(0,10)}</Information>

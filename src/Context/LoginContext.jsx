@@ -1,5 +1,7 @@
 import React, { createContext, useEffect, useState, useMemo } from 'react';
 import { User } from '../Pages/User/Users';
+import Loading from '../Components/Loading/Loading';
+import { Navigate } from 'react-router-dom';
 
 export const LoginContext = createContext();
 
@@ -16,6 +18,19 @@ export const LoginContextProvider = ({ children }) => {
     }
     setLoading(false);
   }, [loginData]);
+  //logging out user after a 45 minute session;
+  useEffect(() => {
+    if (loginData!=null) {
+      console.log("Triggred logout after 45")
+      const logoutAfterFortyFive = setTimeout(() => {
+        handleLogout();
+      }, 45 * 60 * 1000); //log out after 45 minutes
+      return () => {
+        clearTimeout(logoutAfterFortyFive);
+      };
+    }
+  }, [loginData]);
+
 
   const handleLogin = async (userData) => {
     await setLogin(userData);
@@ -24,6 +39,7 @@ export const LoginContextProvider = ({ children }) => {
 
   const handleLogout = () => {
     setLogin(null);
+    alert("Logged Out");
     localStorage.removeItem("suviadmin");
     setCart(null);
   };
@@ -40,7 +56,7 @@ export const LoginContextProvider = ({ children }) => {
   );
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading/>
   }
 
   return (

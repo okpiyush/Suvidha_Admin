@@ -43,7 +43,7 @@ const Button=styled.div`
 }
 `
 const NewOrder = () => {
-    const url="http://localhost:5001/api/order?new=true";
+    const url="https://businessmanagementsolutionapi.onrender.com/api/order?new=true";
     
     const {loginData} = useContext(LoginContext);
 

@@ -3,11 +3,11 @@ import styled from 'styled-components'
 import { useHook } from '../../Hooks/useHook'
 import { LoginContext } from '../../Context/LoginContext'
 import Loading from '../../Components/Loading/Loading'
-import AddEmailModal from '../../Components/Modals/AddEmailModal'
 import ConfirmationModal from '../../Components/Modals/confirmationModal'
 import SuccessModel from "../../Components/Modals/SuccessModel"
-import SendSingleEmail from "../../Components/Modals/SendSingleEmail"
 import axios from 'axios'
+import SeeAnnouncements from '../../Components/Modals/SeeAnnouncements'
+import NewAnnouncement from '../../Components/Modals/NewAnnouncement'
 const Div=styled.div`
   margin-top:30px;
   flex:1;
@@ -15,7 +15,10 @@ const Div=styled.div`
   padding-top:30px;
 `
 const Li=styled.li`
-display:flex;
+  border-radius:3px 0px 0px 3px;
+  border-left:3px solid rgb(107, 60, 192) ;
+  margin:5px;
+  display:flex;
   height:70px;
   ${'' /* width:700px; */}
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -57,7 +60,8 @@ const Deev=styled.div`
   justify-content:space-around;
 `
 const Button1=styled.a`
-  width:200px;
+  width:220px;
+  font-size:25px;
   text-decoration :none;
   ${'' /* background-color:black; */}
   height:50px;
@@ -96,7 +100,7 @@ justify-content:right;
 
 
 const Announcements = () => {
-  const url = 'http://localhost:5001/api/mail/getmails/';
+  const url = 'https://businessmanagementsolutionapi.onrender.com/api/announcement/getall';
   const [loading, setLoading] = useState(true);
   const { loginData } = useContext(LoginContext);
   const [showModal, setShowModal] = useState(false);
@@ -105,17 +109,13 @@ const Announcements = () => {
   const [leSuccess, setSuccess] = useState(false);
   const [data, setData] = useState(null);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const [mail,setMail]=useState(undefined)
+  const [announcement,setAnnouncement]=useState(null);
   let acc;
   if (!loginData) {
     acc = JSON.parse(localStorage.getItem('suviadmin'));
   } else {
     acc = loginData;
   }
-
-  const handleShowModal = () => {
-    setShowModal(!showModal);
-  };
 
   const temp = useHook(url, acc.accessToken);
 
@@ -145,8 +145,17 @@ const Announcements = () => {
 
   // handle show single modal for handing the specific email modal;
   const handleShowSingleModal=async (e)=>{
-    const getMail=e.target.getAttribute("value");
-    if(getMail!=null)setMail(getMail);
+    if(e.target.id.length!==0)
+    {
+        const data={
+            id:e.target.getAttribute("id"),
+            announcement:e.target.getAttribute("announcements").split(","),
+            featured:e.target.getAttribute("featured"),
+        }
+        setAnnouncement(data);
+    }
+    
+    
     setShowSingleModal(!showSingleModal);
 
   }
@@ -168,7 +177,7 @@ const Announcements = () => {
   //for deletion of a  mail 
   const handleDelete =async (index) => {
     console.log(index);
-    const url=`http://localhost:5001/api/products/${index}`
+    const url=`https://businessmanagementsolutionapi.onrender.com/api/announcement/delete/${index}`
     try{
       const headers={
         "token":`Bearer ${loginData.accessToken}`
@@ -197,7 +206,7 @@ const Announcements = () => {
                 <Wow>
                 <Button2 onClick={handleShowModal1}><i class='bx bx-x-circle'></i></Button2>
                 </Wow>
-                <AddEmailModal onSuccess={()=>{setShowModal1(false)}} onUpdate={updateData}/>
+                <NewAnnouncement onSuccess={()=>{setShowModal1(false)}} onUpdate={updateData}/>
               </Modal> 
             )
           }
@@ -207,28 +216,26 @@ const Announcements = () => {
                 <Wow>
                 <Button2 onClick={handleShowSingleModal}><i class='bx bx-x-circle'></i></Button2>
                 </Wow>
-                <SendSingleEmail onSuccess={()=>{setShowSingleModal(false)}} onUpdate={updateData} email={mail}/>
+                <SeeAnnouncements id={announcement.id} announcements={announcement.announcement} featured={announcement.featured}/>
               </Modal> )
           }
           <Deev>
-            <h2>All Mails</h2>
-            <Button1 onClick={handleShowModal1}><i class='bx bxs-file-plus'></i> Send Email</Button1>
+            <h2>All Announcements</h2>
+            <Button1 onClick={handleShowModal1}><i class='bx bxs-megaphone'></i> Add Announcement</Button1>
           </Deev>
           {leSuccess&&<SuccessModel/>}
           <Ul>
-            {data.map((item) => (
-              <Li key={item.id}>
-                <Information width="150px">{item._id}</Information>
-                <Information width="150px">{item.mail}</Information> 
-                <Information>{item.createdAt.substring(0,10)}</Information>
+            {data.map((item) => (  
+              <Li key={item._id}>
+                <Information>{item._id}</Information>
+                <Information> {item.announcement[0]}...<b>see more</b></Information>
+                <Information> {item.featured.toString()}</Information>
                 <Information>
-                  <Button onClick={handleShowSingleModal} color="green"><i class='bx bx-mail-send' value={item.mail}></i></Button>
-                <Button
-                  color="red"
-                  onClick={() => handleDeleteConfirmation(item)}
-                >
-                  <i className="bx bxs-trash-alt"></i>
-                </Button>
+                    <Button onClick={handleShowSingleModal} color="green"><i class='bx bx-window-open' id={item._id} announcements={item.announcement} featured={item.featured.toString()} ></i></Button>
+                    <Button onClick={handleShowSingleModal} color="green"><i class='bx bxs-bullseye' ></i></Button>
+                    <Button color="red" onClick={() => handleDeleteConfirmation(item)}>
+                        <i className="bx bxs-trash-alt"></i>
+                    </Button>
                 </Information>
               </Li>
             ))}

@@ -96,7 +96,8 @@ const Login = () => {
       };
 
       try{
-        const response = await axios.post('http://localhost:5001/api/auth/login', userData);
+        console.log(process.env.API_URL);
+        const response = await axios.post(`https://businessmanagementsolutionapi.onrender.com/api/auth/login`, userData);
         // Handle the response as needed
         if(response.status===401){
           alert("Invalid Username or Password");

@@ -13,7 +13,10 @@ const Div=styled.div`
   padding-top:30px;
 `
 const Li=styled.li`
-display:flex;
+  border-radius:3px 0px 0px 3px;
+  border-left:3px solid rgb(107, 60, 192) ;
+  margin:5px;
+  display:flex;
   height:70px;
   ${'' /* width:700px; */}
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -94,7 +97,7 @@ justify-content:right;
 
 
 const Products = () => {
-  const url = 'http://localhost:5001/api/products/';
+  const url = 'https://businessmanagementsolutionapi.onrender.com/api/products/';
   const [loading, setLoading] = useState(true);
   const { loginData } = useContext(LoginContext);
   const [showModal, setShowModal] = useState(false);
@@ -137,7 +140,7 @@ const Products = () => {
   }
   const handleDelete =async (index) => {
     console.log(index);
-    const url=`http://localhost:5001/api/products/${index}`
+    const url=`https://businessmanagementsolutionapi.onrender.com/api/products/${index}`
     try{
       const headers={
         "token":`Bearer ${loginData.accessToken}`
@@ -203,7 +206,7 @@ const Products = () => {
 };
 
 // const Products = () => {
-//   const url="http://localhost:5001/api/products/";
+//   const url="https://businessmanagementsolutionapi.onrender.com/api/products/";
 //   const [loading,setLoading]=useState(true);
 //   const {loginData} = useContext(LoginContext);
 //   const [showModal,setShowModal]=useState(false);

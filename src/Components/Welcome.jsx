@@ -5,6 +5,7 @@ import { LoginContext } from '../Context/LoginContext'
 import { useNavigate } from 'react-router-dom'
 import  axios  from 'axios'
 import { useEffect } from 'react'
+import wow from "./Logo.png"
 const Container = styled.div`
     background-color:rgba(114, 49, 235);
     background-size: cover;
@@ -135,7 +136,7 @@ const Welcome = () => {
       };
 
       try{
-        const response = await axios.post('http://localhost:5001/api/auth/login', userData);
+        const response = await axios.post(`https://businessmanagementsolutionapi.onrender.com/api/auth/login`, userData);
         // Handle the response as needed
         if(response.status===401){
           alert("Invalid Username or Password");
@@ -169,7 +170,7 @@ const Welcome = () => {
           
         </Wrapper3>
         
-        <IMG src="https://play-lh.googleusercontent.com/AhtWmfnq-piELsmsZbJYkoWNrr8wLsXzmiSdL2TXaKMDzXMYqwBIRSFLchDVEeUut8As"/>    
+        <IMG src={wow}/>    
       </Wrapper1>
         <Wrapper>
             <Title>

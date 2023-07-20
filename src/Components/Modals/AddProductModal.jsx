@@ -63,7 +63,7 @@ const AddProductModal = ({onSuccess,onUpdate}) => {
         const headers={
             "token":`Bearer ${loginData.accessToken}`
         }
-        const url="http://localhost:5001/api/products/"
+        const url="https://businessmanagementsolutionapi.onrender.com/api/products/"
         try{
             const response=await axios.post(url,payload,{headers});
             console.log(response);

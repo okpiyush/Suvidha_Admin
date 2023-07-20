@@ -10,4 +10,14 @@
   .chartTitle {
     margin-bottom: 20px;
   }
-  
+  .buttons{
+    width: inherit;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .button{
+    border-radius:20px;
+    padding:3px;
+    background-color: #fff;
+  }

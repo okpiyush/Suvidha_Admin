@@ -42,9 +42,9 @@ const Summary = (props) => {
     const [orders,setOrders]=useState();
     const [loading,setLaoding]=useState(true);
 
-    const user=useHook("http://localhost:5001/api/users",loginData.accessToken);
-    const product=useHook("http://localhost:5001/api/products/",loginData.accessToken);
-    const order=useHook("http://localhost:5001/api/order/",loginData.accessToken);
+    const user=useHook("https://businessmanagementsolutionapi.onrender.com/api/users",loginData.accessToken);
+    const product=useHook("https://businessmanagementsolutionapi.onrender.com/api/products/",loginData.accessToken);
+    const order=useHook("https://businessmanagementsolutionapi.onrender.com/api/order/",loginData.accessToken);
 
     useEffect(()=>{
         console.log(products);

@@ -28,10 +28,11 @@ const NewOrders=styled.div``
 
 const Homey = (props) => {
   const {loginData}=useContext(LoginContext);
-  const url="http://localhost:5001/api/users/stats"
+  const url="https://businessmanagementsolutionapi.onrender.com/api/users/stats"
   const temp=useHook(url,loginData.accessToken);
   const userData=!temp?[]:temp;
-  const sortedUserData = userData.slice().sort((a, b) => a.id - b.id);
+  console.log(userData);
+  const sortedUserData = userData.slice().sort((a, b) => a._id - b._id);
   console.log(sortedUserData)
   const productData = [
     {
@@ -51,7 +52,7 @@ const Homey = (props) => {
     <Wrapper>
       <Summary/>
       {/* total sales graph */}
-      <Wrapper className="shadow" height="20vh"direction="row">
+      <Wrapper className="shadow" direction="row">
         <Graph data={sortedUserData} title="User Analytics" grid dataKey="total"/>
         <Graph data={productData} title="Product Analytics" grid dataKey="Sales"/>
       </Wrapper>

@@ -41,7 +41,7 @@ const Button=styled.a`
 }
 `
 const NewUser = () => {
-    const url="http://localhost:5001/api/users?new=true";
+    const url="https://businessmanagementsolutionapi.onrender.com/api/users?new=true";
     
     const {loginData} = useContext(LoginContext);
  

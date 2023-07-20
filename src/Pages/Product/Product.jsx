@@ -51,7 +51,7 @@ const Product = () => {
   const {id}=useParams();
   const [disabled,setDisabled]=useState(false);
   const [Item,setItem]=useState({});
-  const url=`http://localhost:5001/api/products/find/${id}`
+  const url=`https://businessmanagementsolutionapi.onrender.com/api/products/find/${id}`
   const {loginData}=useContext(LoginContext);
   const [loading,setLoading]=useState(true);
   const getItem=useHook(url,loginData.accessToken);

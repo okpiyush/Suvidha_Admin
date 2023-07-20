@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { LoginContext } from '../../Context/LoginContext';
 import axios from 'axios';
+import { usePost } from '../../Hooks/usePost';
 
 const Form=styled.form`
     display:flex;
@@ -43,34 +44,28 @@ const Textarea=styled.textarea`
 `
 
 
-const SendSingleEmail = ({email,onSuccess,onUpdate}) => {
+const AddSlideModal = ({onSuccess,onUpdate}) => {
     const {loginData}=useContext(LoginContext);
     const handleSubmit= async (e)=>{
         e.preventDefault(); //prevent the form form refreshign the page
-        const { destination, name,designation,subject,desc} = e.target.elements;
-        //this is just to give it a final check if the  values are at the correct space or not
-        if(destination.value===""|| name.value===""||designation.value===""||subject.value===""||desc.value===""||subject.value.length<=5||desc.value.length<=50){
-            alert("Fill the required fields first");
-            return;
-        }
+        const { title, img,color,desc,link} = e.target.elements;
         const payload={
-                email:destination.value,
-                name:name.value,
-                desig : designation.value,
-                subject: subject.value,
-                body:desc.value       
+            img:img.value,
+            title:title.value,
+            color:color.value,
+            desc:desc.value,
+            link:link.value,
         }
-
+        console.log(payload);
         const headers={
             "token":`Bearer ${loginData.accessToken}`
         }
-
-        const url="https://businessmanagementsolutionapi.onrender.com/api/mail/sendmail"
+        const url="https://businessmanagementsolutionapi.onrender.com/api/slideshow/"
         try{
             const response=await axios.post(url,payload,{headers});
             console.log(response);
            try{
-            onUpdate();
+            onUpdate(response.data);
            }catch(err){
             console.log(err);
            }
@@ -78,23 +73,22 @@ const SendSingleEmail = ({email,onSuccess,onUpdate}) => {
         }catch(err){
             console.log("Error")
         }
-        
     }
     return (
     <div>
     <h2>
-        Send Email
+        Add Slide
     </h2>
         <Form onSubmit={handleSubmit}>
-            <Input name="destination" value={email} disabled></Input>
-            <Input name="name" value={loginData.username.toUpperCase()} disabled></Input>
-            <Input name="designation"  placeholder="Your Designation" required></Input>
-            <Input name="subject" placeholder="Subject (min length is 5)" required></Input>
-            <Textarea name="desc" placeholder="Email Body (min length is 50)" required></Textarea>
+            <Input name="title" placeholder="Title" required></Input>
+            <Input name="img" placeholder="Image Link" required></Input>
+            <Input name="link" placeholder="link" required></Input>
+            <Input type="color" name="color"  required></Input>
+            <Textarea name="desc" placeholder="Description" required></Textarea>
             <center><Button type="submit">Submit</Button></center>
         </Form>
     </div>
   )
 }
 
-export default SendSingleEmail
+export default AddSlideModal
