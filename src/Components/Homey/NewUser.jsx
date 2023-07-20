@@ -8,6 +8,7 @@ const Div=styled.div`
   padding-top:30px;
 `
 const Li=styled.li`
+padding-left:10px;
 display:flex;
   height:70px;
   ${'' /* width:700px; */}
@@ -40,7 +41,7 @@ const Button=styled.a`
     color:rgba(114, 49, 235,0.8)
 }
 `
-const NewUser = () => {
+const NewUser = (props) => {
     const url="https://businessmanagementsolutionapi.onrender.com/api/users?new=true";
     
     const {loginData} = useContext(LoginContext);
@@ -60,7 +61,17 @@ const NewUser = () => {
       <h2>New Users</h2>
       <Ul>
       {data.map((item)=>{
-        return <Li key={item.id}><Img src={item.img} alt="userImage"/><Information width="150px">{item.username}</Information> <Information width="220px">{item.email}</Information> <Information>{item.createdAt.substring(0,10)}</Information> <Information><Button href={`/users/${item._id}`} color="green"><i class='bx bx-window-open' ></i></Button></Information></Li>
+        return <Li key={item.id}>
+        <Img src={item.img} alt="userImage"/>
+        <Information width="150px">{item.username}</Information> 
+        {props.direction==="row"&&<Information width="220px">{item.email}</Information>}
+        <Information>{item.createdAt.substring(0,10)}</Information> 
+        <Information>
+          <Button href={`/users/${item._id}`} color="green">
+            <i class='bx bx-window-open' ></i>
+          </Button>
+          </Information>
+      </Li>
       })}
       </Ul>
     </Div>

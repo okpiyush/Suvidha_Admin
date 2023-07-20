@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext,useState,useEffect } from 'react'
 import styled from 'styled-components'
 import { LoginContext } from '../../Context/LoginContext';
 import axios from 'axios';
@@ -45,7 +45,28 @@ const Textarea=styled.textarea`
 
 
 const AddProductModal = ({onSuccess,onUpdate}) => {
+
     const {loginData}=useContext(LoginContext);
+    const [direction, setDirection] = useState('row');
+
+    useEffect(() => {
+      // Function to update the direction based on the device width
+      const handleDirectionChange = () => {
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+        setDirection(isMobile ? 'column' : 'row');
+      };
+  
+      // Set initial direction on component mount
+      handleDirectionChange();
+  
+      // Add event listener for direction change on window resize
+      window.addEventListener('resize', handleDirectionChange);
+  
+      // Clean up event listener on component unmount
+      return () => {
+        window.removeEventListener('resize', handleDirectionChange);
+      };
+    }, []);
     const handleSubmit= async (e)=>{
         e.preventDefault(); //prevent the form form refreshign the page
         const { name, price, categories,img,size,desc} = e.target.elements;

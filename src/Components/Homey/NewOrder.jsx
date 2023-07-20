@@ -9,8 +9,9 @@ const Div=styled.div`
   padding-top:30px;
 `
 const Li=styled.li`
-display:flex;
+  display:flex;
   height:70px;
+  padding-left:10px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   align-content:center;
   position:relative
@@ -33,7 +34,7 @@ const Information=styled.div`
   display:flex;
 `
 const Button=styled.div`
-  width:50px;
+  width:40px;
   height:50px;
   font-size:40px;
   margin:auto;
@@ -42,7 +43,7 @@ const Button=styled.div`
     color:rgba(114, 49, 235,0.8)
 }
 `
-const NewOrder = () => {
+const NewOrder = (props) => {
     const url="https://businessmanagementsolutionapi.onrender.com/api/order?new=true";
     
     const {loginData} = useContext(LoginContext);
@@ -64,10 +65,10 @@ const NewOrder = () => {
       {data.map((item)=>{
         return (
             <Li key={item.id}>
-                <Information>{item._id}</Information>
-                <Information>{item.amount}</Information>
+                <Information width="200px">{item._id}</Information>
+                {props.direction==="row"&& <Information>{item.amount}</Information>}
                 <Information color={item.status==="Pending"?"red":"green"}>{item.status}</Information>
-                <Information>
+                <Information width="80px">
                     <Button color="red" > <i class='bx bxs-x-circle'></i></Button>
                     <Button color="green"><i class='bx bxs-chevrons-right' ></i></Button>
                 </Information>

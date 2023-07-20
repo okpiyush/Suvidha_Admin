@@ -16,7 +16,7 @@ const Container = styled.div`
 `
 const Wrapper = styled.div`
     ${'' /* background-color:rgba(256,256,256,0.6); */}
-    padding:10px;
+    padding:5px;
     border-radius:2vw;
     height:500px;
     width:20vw;
@@ -30,7 +30,7 @@ const Wrapper = styled.div`
 const Wrapper1 = styled.div`
     background-color:rgba(256,256,256,0.5);
     border-radius:10vw;
-    padding:10px;
+    padding:5px;
     height:inherit;
     width:60vw;
     display:flex;
@@ -45,7 +45,7 @@ const Wrapper3 = styled.div`
     background-color:rgba(256,256,256,0.1);
     border-radius:10vw;
     
-    padding:10px;
+    padding:5px;
     height:inherit;
     width:60vw;
     display:flex;

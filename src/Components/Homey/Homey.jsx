@@ -1,11 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext,useEffect,useState  } from 'react'
 import styled from 'styled-components';
 import Graph from './Graph';
 import Summary from './Summary';
 import "./chart.css"
 import NewUser from './NewUser';
 import NewOrder from './NewOrder';
-import { useHook } from '../../Hooks/useHook';
+import { useHook} from '../../Hooks/useHook';
 import { LoginContext } from '../../Context/LoginContext';
 const Wrapper=styled.div`
   width: ${props=>props.direction?"90vw":"100vw"};
@@ -17,7 +17,8 @@ const Wrapper=styled.div`
   padding-top:60px;
 `
 const New= styled.div`
-  width:90vw;
+  width:98vw;
+  
   display:flex;
   flex-direction:${props=>props.direction?props.direction:"column"};
   justify-content:space-around;
@@ -48,17 +49,38 @@ const Homey = (props) => {
       "Sales": 5000,
     },
   ];
+  const [direction, setDirection] = useState('row');
+
+  useEffect(() => {
+    // Function to update the direction based on the device width
+    const handleDirectionChange = () => {
+      const isMobile = window.matchMedia('(max-width: 767px)').matches;
+      setDirection(isMobile ? 'column' : 'row');
+    };
+
+    // Set initial direction on component mount
+    handleDirectionChange();
+
+    // Add event listener for direction change on window resize
+    window.addEventListener('resize', handleDirectionChange);
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleDirectionChange);
+    };
+  }, []);
   return (
     <Wrapper>
       <Summary/>
       {/* total sales graph */}
-      <Wrapper className="shadow" direction="row">
+      <Wrapper className="shadow" direction={direction}>
         <Graph data={sortedUserData} title="User Analytics" grid dataKey="total"/>
-        <Graph data={productData} title="Product Analytics" grid dataKey="Sales"/>
+        <Graph data={productData} title="Sales Analytics" grid dataKey="Sales"/>
+        <Graph data={sortedUserData} title="Product Analytics" grid dataKey="total"/>
       </Wrapper>
-      <New className='shadow' direction="row">
-          <NewUser/>
-          <NewOrder/>
+      <New className='shadow' direction={direction}>
+          <NewUser direction={direction}/>
+          <NewOrder direction={direction}/>
       </New>
     </Wrapper>
   )

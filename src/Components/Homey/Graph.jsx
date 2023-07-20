@@ -69,7 +69,7 @@ const Graph = ({ data, title, dataKey, grid }) => {
       <h3 className="chart-title">{title}</h3>
       <div className="chart-wrapper">
         <div className="buttons"><button className="button" onClick={()=>pushToFind(data,"login")}>Predict future</button><button className="button">Download Data</button></div>
-        <ResponsiveContainer width={500} height={300}>
+        <ResponsiveContainer width={300} height={300}>
           <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
             <XAxis dataKey="_id" stroke="#5550bd" tickFormatter={mapIdToMonth} />
             <Line type="monotone" dataKey={dataKey} stroke="#5550bd" strokeWidth={2} dot={{ r:3}} activeDot={{ r: 5}} />
