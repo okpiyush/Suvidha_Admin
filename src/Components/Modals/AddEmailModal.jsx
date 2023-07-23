@@ -2,7 +2,6 @@ import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { LoginContext } from '../../Context/LoginContext';
 import axios from 'axios';
-import { usePost } from '../../Hooks/usePost';
 
 const Form=styled.form`
     display:flex;
@@ -48,27 +47,29 @@ const AddEmailModal = ({onSuccess,onUpdate}) => {
     const {loginData}=useContext(LoginContext);
     const handleSubmit= async (e)=>{
         e.preventDefault(); //prevent the form form refreshign the page
-        const { name, price, categories,img,size,desc} = e.target.elements;
-        console.log(name.value+" "+price.value);
-        const payload={
-                "title":name.value,
-                "desc" :desc.value,
-                "categories":categories.value.split(" "),
-                "size":size.value,
-                "img":img.value,
-                "price":price.value,
-                "featured":true
+        const {name,designation,subject,desc} = e.target.elements;
+        //this is just to give it a final check if the  values are at the correct space or not
+        if(name.value===""||designation.value===""||subject.value===""||desc.value===""){
+            alert("Fill the required fields first");
+            return;
         }
-        console.log(payload,loginData.payload);
+        const payload={
+                name:name.value,
+                desig : designation.value,
+                subject: subject.value,
+                body:desc.value
+        }
+
         const headers={
             "token":`Bearer ${loginData.accessToken}`
         }
-        const url="https://businessmanagementsolutionapi.onrender.com/api/products/"
+
+        const url="https://businessmanagementsolutionapi.onrender.com/api/mail/bulkmail"
         try{
             const response=await axios.post(url,payload,{headers});
             console.log(response);
            try{
-            onUpdate(response.data);
+            onUpdate();
            }catch(err){
             console.log(err);
            }
@@ -76,19 +77,20 @@ const AddEmailModal = ({onSuccess,onUpdate}) => {
         }catch(err){
             console.log("Error")
         }
+        
     }
     return (
     <div>
     <h2>
         Send Global Email
     </h2>
-        <Form onSubmit={handleSubmit}>
-            <Input name="name" placeholder="Your Name"></Input>
-            <Input name="designation" placeholder='Your Designation'></Input>
-            <Input name="Subject" placeholder="Subject"></Input>
-            <Textarea name="desc" placeholder="Email Body"></Textarea>
-            <center><Button type="submit">Submit</Button></center>
-        </Form>
+    <Form onSubmit={handleSubmit}>
+        <Input name="name" placeholder="Your Name"></Input>
+        <Input name="designation" placeholder='Your Designation'></Input>
+        <Input name="subject" placeholder="Subject"></Input>
+        <Textarea name="desc" placeholder="Email Body"></Textarea>
+        <center><Button type="submit">Submit</Button></center>
+    </Form>
     </div>
   )
 }

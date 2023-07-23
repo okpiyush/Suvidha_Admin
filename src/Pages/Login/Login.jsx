@@ -116,7 +116,9 @@ const Login = () => {
         console.log(err);
       }
     };
-
+    useEffect(()=>{
+      alert("Demo ID: admin || Demo Password: admin");
+    },[]);
   
   return (
     <div>

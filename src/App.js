@@ -14,6 +14,7 @@ import Announcement from './Pages/Announcements/Announcement';
 import Slideshow from "./Pages/Slideshow/Slideshow";
 import Chat from "./Pages/Chat/Chat";
 function App() {
+  
   return (
     <div>
       <Navbar/>
@@ -32,7 +33,6 @@ function App() {
             <Route path="login" element={<Login/>}/>
             <Route path="announcements" element={<Announcement/>}/>
             <Route path="profile" element={<Profile/>}/>
-
             {/* path to direct to home if anything wierd happends */}
             <Route path="*" element={<Navigate to="/" />} />
           </Route>
