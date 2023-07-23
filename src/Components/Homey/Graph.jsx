@@ -48,7 +48,7 @@ const Graph = ({ data, title, dataKey, grid }) => {
       })
     }
     //send the converted data to the api call
-    const url="http://localhost:5001/api/find/predicted"
+    const url="https://businessmanagementsolutionapi.onrender.com/api/find/predicted"
     const headers={
       "token":`Bearer ${loginData.accessToken}`
     }
@@ -61,7 +61,7 @@ const Graph = ({ data, title, dataKey, grid }) => {
     data.map((item,num)=>{
       console.log(num);
       if(num===0) return 1;
-      item.predict=predicted.data[num-1][1];
+      item.predict=Math.round(predicted.data[num-1][1]);
       return 1;
     });
     setPredictedData(true);
