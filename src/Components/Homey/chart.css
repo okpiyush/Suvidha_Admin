@@ -21,3 +21,10 @@
     padding:3px;
     background-color: #fff;
   }
+  @media (max-width: 767px) {
+    body {
+      font-size: 14px; /* Adjust font size for better readability on small screens */
+      /* Add your other mobile-specific styles here */
+    }
+  }
+  

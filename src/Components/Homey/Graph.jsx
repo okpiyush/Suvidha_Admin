@@ -43,12 +43,12 @@ const Graph = ({ data, title, dataKey, grid }) => {
     if(type==="login"){
       data.map((item)=>{
         map.push([item._id,item.total]);
-        find.push([item.id]);
+        find.push([item._id+1]);
         return 1; 
       })
     }
     //send the converted data to the api call
-    const url="https://businessmanagementsolutionapi.onrender.com/api/find/predicted"
+    const url="http://localhost:5001/api/find/predicted"
     const headers={
       "token":`Bearer ${loginData.accessToken}`
     }
@@ -57,9 +57,11 @@ const Graph = ({ data, title, dataKey, grid }) => {
       toFind:find
     }
     let predicted=await axios.post(url,payload,{headers});
-    console.log(predicted);
+    console.log(predicted.data);
     data.map((item,num)=>{
-      item["predict"] = Number(((predicted?.data[num-1] || [])[item._id]));
+      console.log(num);
+      if(num===0) return 1;
+      item.predict=predicted.data[num-1][1];
       return 1;
     });
     setPredictedData(true);

@@ -96,8 +96,8 @@ const UserData=styled.div`
 padding-top:50px;
   width:100vw;
   justify-content:"space-around";
-  display:flex;
-  flex-direction:"inline-block"
+  display:"flex";
+  flex-direction:${props=>props.direction};
 `
 const UserImage=styled.img`
 flex:1;
@@ -118,9 +118,6 @@ const UserName=styled.div`
 const UserEmail=styled.div`
 
 `
-const UserPassword=styled.input`
-  width
-`
 export const User = () => {
   const {id}=useParams();
   const [disabled,setDisabled]=useState(false);
@@ -129,7 +126,19 @@ export const User = () => {
   const {loginData}=useContext(LoginContext);
   const [loading,setLoading]=useState(true);
   const getuser=useHook(url,loginData.accessToken);
-  console.log(getuser);
+  const [direction, setDirection] = useState('row');
+
+  useEffect(() => {
+    const handleDirectionChange = () => {
+      const isMobile = window.matchMedia('(max-width: 767px)').matches;
+      setDirection(isMobile ? 'column' : 'row');
+    };
+    handleDirectionChange();
+    window.addEventListener('resize', handleDirectionChange);
+    return () => {
+      window.removeEventListener('resize', handleDirectionChange);
+    }
+  },[])
   useEffect(()=>{
     if (getuser) {
       setUser(getuser);
@@ -142,7 +151,7 @@ export const User = () => {
     )
   }
   return (
-    <UserData>
+    <UserData direction={direction}>
       <UserImage src={user.img}/>
       <UserInfo className='bs-red'>
         <UserName><b>Name :</b> {user.username}</UserName>
