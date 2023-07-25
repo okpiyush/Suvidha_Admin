@@ -101,7 +101,18 @@ const Login = () => {
     setFlagData(text); 
     setFlag(true);     
   }
+  
+  const apiUrl = 'https://api.my-ip.io/ip.json';
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(apiUrl);
+      return(response.data.ip);
+    } catch (error) {
+      console.error('Failed to fetch data from the API:');
+    }
+  };
     const handleSubmit = async (e) => {
+      
       e.preventDefault();
       if(username===""||password===""){
         setter("Please enter Username and Password");
@@ -111,10 +122,16 @@ const Login = () => {
         "username" :username,
         "password" :password
       };
-
+      
+      let userIp=await fetchData() ;
+      console.log(userIp)
+      const headers={
+        ip:userIp
+      }
+      console.log(headers);
       try{
         setLoading(true);
-        const response = await axios.post(`https://businessmanagementsolutionapi.onrender.com/api/auth/login`, userData);
+        const response = await axios.post(`http://businessmanagementsolutionapi.onrender.com/api/auth/login`, userData,{headers});
         // Handle the response as needed
         if(response.data.isAdmin){
           handleLogin(response.data);
