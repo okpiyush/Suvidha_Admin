@@ -16,7 +16,19 @@ const NavbarContainer = styled.div`
   z-index: 999;
   background-color: #fff;
 `;
-
+const Button=styled.a`
+  font-size:25px;
+  color:white;
+  border-radius:20px;
+  background-color:rgb(107, 60, 192);
+  padding :0px 10px;
+  margin-right:30px;
+  text-decoration:none;
+  box-shadow: 0px 2px 10px 2px rgba(0,0,0,0.3);
+  &:hover{
+    color:white;
+  }
+`
 const Navbar = (children) => {
   const [sidebarActive, setSidebarActive] = useState(false);
   const { loginData, handleLogout } = useContext(LoginContext);
@@ -108,7 +120,9 @@ const Navbar = (children) => {
           <button className="btn border-0" id="menu-btn" onClick={toggleSidebar}>
             <i className="bx bx-menu"></i>
           </button>
+
           <Center>
+            <Button href="https://suvidhaecommerce.netlify.app/" target="_blank">Website</Button>
             Suvidha Admin
           </Center>
         </nav>

@@ -1,0 +1,12 @@
+#flag{
+    background-color:white;;
+    font-size:18px;
+    text-align: center;
+    border-left:4px solid red;
+    position:absolute;
+    padding:5px;
+    z-index:100;
+    top:100px;
+    left:40vw;
+    box-shadow: 0px 12px 50px 5px rgba(0,0,0,0.4);
+}

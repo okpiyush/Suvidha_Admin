@@ -30,25 +30,14 @@ const NewOrders=styled.div``
 const Homey = (props) => {
   const {loginData}=useContext(LoginContext);
   const url="https://businessmanagementsolutionapi.onrender.com/api/users/stats"
+  const url1="https://businessmanagementsolutionapi.onrender.com/api/products/stats"
   const temp=useHook(url,loginData.accessToken);
+  const temp1=useHook(url1,loginData.accessToken);
   const userData=!temp?[]:temp;
-  console.log(userData);
+  const productData=!temp1?[]:temp1;
+  console.log(productData);
   const sortedUserData = userData.slice().sort((a, b) => a._id - b._id);
-  console.log(sortedUserData)
-  const productData = [
-    {
-      name: "Jan",
-      "Sales": 4000,
-    },
-    {
-      name: "Feb",
-      "Sales": 3000,
-    },
-    {
-      name: "Mar",
-      "Sales": 5000,
-    },
-  ];
+  const sortedProductData=productData.slice().sort((a, b) => a._id - b._id);
   const [direction, setDirection] = useState('row');
 
   useEffect(() => {
@@ -75,8 +64,8 @@ const Homey = (props) => {
       {/* total sales graph */}
       <Wrapper className="shadow" direction={direction}>
         <Graph data={sortedUserData} title="User Analytics" grid dataKey="total"/>
-        <Graph data={productData} title="Sales Analytics" grid dataKey="Sales"/>
-        <Graph data={sortedUserData} title="Product Analytics" grid dataKey="total"/>
+        <Graph data={sortedProductData} title="Products Added" grid dataKey="total"/>
+        <Graph data={sortedUserData} title="sales" grid dataKey="total"/>
       </Wrapper>
       <New className='shadow' direction={direction}>
           <NewUser direction={direction}/>

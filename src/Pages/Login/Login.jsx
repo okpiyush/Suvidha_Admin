@@ -5,6 +5,8 @@ import { LoginContext } from '../../Context/LoginContext'
 import { useNavigate } from 'react-router-dom'
 import  axios  from 'axios'
 import { useEffect } from 'react'
+import Loading from '../../Components/Loading/Loading'
+import Flag from '../../Components/Modals/Flag'
 const Container = styled.div`
     background-color:rgba(114, 49, 235);
     background-size: cover;
@@ -71,6 +73,9 @@ const Login = () => {
     const { handleLogin,loginData } = useContext(LoginContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading,setLoading]=useState(false);
+    const[flag,setFlag]=useState(false);
+    const [flagData,setFlagData]=useState("");
     const navigate=useNavigate();
     const handleUserChange=(e)=>{
     setUsername(e.target.value);
@@ -83,11 +88,23 @@ const Login = () => {
       navigate("/home",{replace:true});
     }
   }
-  
+  useEffect(()=>{
+    if (flag) {
+      const timer = setTimeout(() => {
+        setFlag(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+
+  },[flag]);
+  const setter=(text)=>{
+    setFlagData(text); 
+    setFlag(true);     
+  }
     const handleSubmit = async (e) => {
       e.preventDefault();
       if(username===""||password===""){
-        alert("Please enter Username and Password");
+        setter("Please enter Username and Password");
         return;
       }
       const userData = {
@@ -96,35 +113,38 @@ const Login = () => {
       };
 
       try{
-        console.log(process.env.API_URL);
+        setLoading(true);
         const response = await axios.post(`https://businessmanagementsolutionapi.onrender.com/api/auth/login`, userData);
         // Handle the response as needed
-        if(response.status===401){
-          alert("Invalid Username or Password");
-        }
-            console.log(response.data);
-    
         if(response.data.isAdmin){
           handleLogin(response.data);
         }else{
-          alert("You are not authorized");
+              
           return;
         }
+        
         navigate("/home", { replace: true });
         checkUser();
       }catch(err){
+        alert("Enter Correct Username or Password")  
+        setLoading(false)
         console.log(err);
       }
     };
     useEffect(()=>{
-      alert("Demo ID: admin || Demo Password: admin");
+      setter(`ID: admin \n Password: admin`);
     },[]);
-  
   return (
     <div>
+    {
+      loading&& <Loading/>
+    }
+      {
+      !loading&&
       <Container>
         
         <Wrapper>
+          {flag&& <Flag text={flagData}/>}
             <Title>
                 Sign in
             </Title>
@@ -138,7 +158,9 @@ const Login = () => {
             
         </Wrapper>
         
-    </Container>
+      </Container>
+    }
+    
     </div>
   )
 }
