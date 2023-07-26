@@ -13,6 +13,7 @@ import Mails from './Pages/Mail/Mails';
 import Announcement from './Pages/Announcements/Announcement';
 import Slideshow from "./Pages/Slideshow/Slideshow";
 import Chat from "./Pages/Chat/Chat";
+import Logs from './Pages/Logs/Logs';
 function App() {
   
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="login" element={<Login/>}/>
             <Route path="announcements" element={<Announcement/>}/>
             <Route path="profile" element={<Profile/>}/>
+            <Route path="report" element={<Logs/>}/>
             {/* path to direct to home if anything wierd happends */}
             <Route path="*" element={<Navigate to="/" />} />
           </Route>

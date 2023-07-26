@@ -85,9 +85,13 @@ const Navbar = (children) => {
                   <i className="bx bx-chat"></i>
                   <span className="mx-2">Chat</span>
                 </a>
-                <a href="/cart" className="nav-link">
+                <a href="/report" className="nav-link">
                   <i className="bx bxs-report"></i>
                   <span  className="mx-2">Report</span>
+                </a>
+                <a href="/billing" className="nav-link">
+                <i class='bx bx-clipboard'></i>
+                  <span className="mx-2">Billing</span>
                 </a>
                 <a href="/profile" className="nav-link">
                   <i className="bx bx-user-check"></i>
