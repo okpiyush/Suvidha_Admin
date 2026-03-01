@@ -1,252 +1,267 @@
-import {React,useContext,useState,useEffect} from 'react'
-import styled from 'styled-components'
-import { useHook } from '../../Hooks/useHook'
-import { LoginContext } from '../../Context/LoginContext'
-import Loading from '../../Components/Loading/Loading'
-import AddEmailModal from '../../Components/Modals/AddEmailModal'
-import ConfirmationModal from '../../Components/Modals/confirmationModal'
-import SuccessModel from "../../Components/Modals/SuccessModel"
-import SendSingleEmail from "../../Components/Modals/SendSingleEmail"
-import axios from 'axios'
-const Div=styled.div`
-  margin-top:30px;
-  flex:1;
-  text-align:center;
-  padding-top:30px;
-`
-const Li=styled.li`
-  border-radius:3px 0px 0px 3px;
-  border-left:3px solid rgb(107, 60, 192) ;
-  margin:5px;
-  display:flex;
-  height:70px;
-  ${'' /* width:700px; */}
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  align-content:center;
-  position:relative
-`
-const Img= styled.img`
-  width: 50px;
-  height:50px;
-  border-radius:50%;
-  margin:auto;
-`
-const Ul=styled.ul`
-  list-style:none;
-`
-const Information=styled.div`
-    Justify-content:center;
-    width:${props=>props.width?props.width:""};
-  margin:auto;
-  display:flex;
-`
-const Button=styled.a`
-  width:50px;
-  height:50px;
-  font-size:40px;
-  margin:auto;
-  color:${props=>props.color?props.color:"black"};
-  &:hover{
-    color:rgba(114, 49, 235,0.8)
-}
-`
-const Deev=styled.div`
-  width:96vw;
-  display:flex;
-  font-size:40px;
-  color:${props=>props.color?props.color:"black"};
-  margin:auto;
-  flex-direction:row;
-  justify-content:space-around;
-`
-const Button1=styled.a`
-  width:200px;
-  text-decoration :none;
-  ${'' /* background-color:black; */}
-  height:50px;
-  font-size:20px;
-  color:${props=>props.color?props.color:"black"};
-  &:hover{
-    color:rgba(114, 49, 235,0.8)
-}
-`
-const Modal=styled.div`
-    position: fixed;
-    background-color:#e8e8e8;
-    height:450px;
-    width:500px;
-    top: 20%;
-    left: 35%;
-    z-index:2;
-    box-shadow: 7px 1px 41px -2px rgba(0,0,0,0.56);
-`
-const Button2=styled.a`
-  text-decoration :none;
-  ${'' /* background-color:black; */}
-  height:10px;
-  font-size:30px;
-  color:${props=>props.color?props.color:"black"};
-  &:hover{
-    color:rgba(114, 49, 235,0.8)
-}
-`
-const Wow=styled.div`
-display:flex;
-justify-content:right;
-`
+import React, { useContext, useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useHook } from '../../Hooks/useHook';
+import { LoginContext } from '../../Context/LoginContext';
+import Loading from '../../Components/Loading/Loading';
+import AddEmailModal from '../../Components/Modals/AddEmailModal';
+import ConfirmationModal from '../../Components/Modals/confirmationModal';
+import SendSingleEmail from "../../Components/Modals/SendSingleEmail";
+import axios from 'axios';
 
+const PageContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease-out;
+`;
 
+const PageHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
 
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+`;
+
+const TableCard = styled.div`
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+`;
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th {
+    background: var(--bg-main);
+    padding: 1rem 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.875rem;
+    color: var(--text-main);
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover {
+    background: var(--bg-main);
+  }
+`;
+
+const MailIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+`;
+
+const ActionBtn = styled.button`
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-right: 0.5rem;
+  color: ${props => props.variant === 'danger' ? 'var(--danger)' : props.variant === 'success' ? 'var(--success)' : 'var(--text-main)'};
+
+  &:hover {
+    background: ${props => props.variant === 'danger' ? 'rgba(239, 68, 68, 0.05)' : props.variant === 'success' ? 'rgba(16, 185, 129, 0.05)' : 'var(--bg-main)'};
+    border-color: ${props => props.variant === 'danger' ? 'var(--danger)' : props.variant === 'success' ? 'var(--success)' : 'var(--primary)'};
+    color: ${props => props.variant === 'danger' ? 'var(--danger)' : props.variant === 'success' ? 'var(--success)' : 'var(--primary)'};
+    transform: translateY(-1px);
+  }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+`;
+
+const ModalContent = styled.div`
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 500px;
+  padding: 2.5rem;
+  position: relative;
+  box-shadow: var(--shadow-xl);
+  animation: slideUp 0.3s ease-out;
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+`;
 
 const Mails = () => {
   const url = 'https://businessmanagementsolutionapi.onrender.com/api/mail/getmails/';
-  const [loading, setLoading] = useState(true);
   const { loginData } = useContext(LoginContext);
-  const [showModal, setShowModal] = useState(false);
-  const [showModal1, setShowModal1] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [showSingleModal, setShowSingleModal] = useState(false);
-  const [leSuccess, setSuccess] = useState(false);
-  const [data, setData] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const [mail,setMail]=useState(undefined)
-  let acc;
-  if (!loginData) {
-    acc = JSON.parse(localStorage.getItem('suviadmin'));
-  } else {
-    acc = loginData;
-  }
+  const [selectedMail, setSelectedMail] = useState(null);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleShowModal = () => {
-    setShowModal(!showModal);
-  };
-
-  const temp = useHook(url, acc.accessToken);
+  const fetchedData = useHook(url, loginData?.accessToken);
 
   useEffect(() => {
-    if(data){
-      setData(data);
-    }else if (temp) {
-      setData(temp);
+    if (fetchedData) {
+      setData(fetchedData);
       setLoading(false);
     }
-  }, [data,temp]);
+  }, [fetchedData]);
 
-  const handleDeleteConfirmation = (item) => {
+  const handleDeleteClick = (item) => {
     setItemToDelete(item);
-    setShowModal(true);
+    setShowDeleteModal(true);
   };
 
-
-
-
-  const handleShowModal1=()=>{
-    setShowModal1(!showModal1);
-  }
-
-
-
-
-  // handle show single modal for handing the specific email modal;
-  const handleShowSingleModal=async (e)=>{
-    const getMail=e.target.getAttribute("value");
-    if(getMail!=null)setMail(getMail);
-    setShowSingleModal(!showSingleModal);
-
-  }
-
-
-
-
-
-  //for updating the data when a new email is added from the admin panel
-  const updateData=()=>{
-    setSuccess(true);
-    setTimeout(()=>{
-      setSuccess(false);
-    },1800);
-
-  }
-
-
-  //for deletion of a  mail 
-  const handleDelete =async (index) => {
-    console.log(index);
-    const url=`https://businessmanagementsolutionapi.onrender.com/api/mail/delete/${index}`
-    try{
-      const response=await axios.delete(url);
-      console.log(response.data); 
-      const updatedData = data.filter(item=>item._id!==index);
-      console.log(updatedData)
-      setData(updatedData);
-      // Close the delete confirmation modal
-      setShowModal(false);
-      updateData();
-    }catch(err){
-      console.log(err);
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
+    const deleteUrl = `https://businessmanagementsolutionapi.onrender.com/api/mail/delete/${itemToDelete._id}`;
+    try {
+      await axios.delete(deleteUrl);
+      setData(data.filter(item => item._id !== itemToDelete._id));
+      setShowDeleteModal(false);
+    } catch (err) {
+      console.error(err);
     }
   };
 
+  const handleSendSingle = (mail) => {
+    setSelectedMail(mail);
+    setShowSingleModal(true);
+  };
+
+  if (loading) return <Loading />;
+
   return (
-    <div>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Div>
-          {
-            showModal1&&(
-              <Modal>
-                <Wow>
-                <Button2 onClick={handleShowModal1}><i class='bx bx-x-circle'></i></Button2>
-                </Wow>
-                <AddEmailModal onSuccess={()=>{setShowModal1(false)}} onUpdate={updateData}/>
-              </Modal> 
-            )
-          }
-          {
-            showSingleModal&&(
-              <Modal>
-                <Wow>
-                <Button2 onClick={handleShowSingleModal}><i class='bx bx-x-circle'></i></Button2>
-                </Wow>
-                <SendSingleEmail onSuccess={()=>{setShowSingleModal(false)}} onUpdate={updateData} email={mail}/>
-              </Modal> )
-          }
-          <Deev>
-            <h2>All Mails</h2>
-            <Button1 onClick={handleShowModal1}><i class='bx bxs-file-plus'></i> Send Email</Button1>
-          </Deev>
-          {leSuccess&&<SuccessModel/>}
-          <Ul>
-            {data.map((item) => (
-              <Li key={item.id}>
-                <Information width="150px">{item._id}</Information>
-                <Information width="150px">{item.mail}</Information> 
-                <Information>{item.createdAt.substring(0,10)}</Information>
-                <Information>
-                  <Button onClick={handleShowSingleModal} color="green"><i class='bx bx-mail-send' value={item.mail}></i></Button>
-                <Button
-                  color="red"
-                  onClick={() => handleDeleteConfirmation(item)}
-                >
-                  <i className="bx bxs-trash-alt"></i>
-                </Button>
-                </Information>
-              </Li>
+    <PageContainer>
+      <PageHeader>
+        <h1 className="page-title">Email Communications</h1>
+        <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
+          <i className='bx bx-send' style={{ marginRight: '0.5rem' }}></i> Broadcast Email
+        </button>
+      </PageHeader>
+
+      <TableCard>
+        <Table>
+          <thead>
+            <tr>
+              <th>Subscriber</th>
+              <th>Email Address</th>
+              <th>Joined Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data?.map((item) => (
+              <tr key={item._id}>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <MailIcon><i className='bx bx-user'></i></MailIcon>
+                    <span style={{ fontWeight: 600, fontSize: '0.75rem', color: 'var(--text-muted)' }}>{item._id}</span>
+                  </div>
+                </td>
+                <td style={{ fontWeight: 500 }}>{item.mail}</td>
+                <td>{item.createdAt?.substring(0, 10)}</td>
+                <td>
+                  <ActionBtn variant="success" onClick={() => handleSendSingle(item.mail)}>
+                    <i className='bx bx-mail-send'></i>
+                  </ActionBtn>
+                  <ActionBtn variant="danger" onClick={() => handleDeleteClick(item)}>
+                    <i className='bx bx-trash'></i>
+                  </ActionBtn>
+                </td>
+              </tr>
             ))}
-          </Ul>
-          {showModal && (
-            <div>
-              {/* Render delete confirmation modal */}
-              <ConfirmationModal
-                item={itemToDelete}
-                onDelete={()=>handleDelete(itemToDelete._id)}
-                onCancel={() => setShowModal(false)}
-              />
-            </div>
-          )}
-        </Div>
+          </tbody>
+        </Table>
+      </TableCard>
+
+      {showAddModal && (
+        <ModalOverlay>
+          <ModalContent>
+            <ActionBtn
+              onClick={() => setShowAddModal(false)}
+              style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', margin: 0 }}
+            >
+              <i className='bx bx-x'></i>
+            </ActionBtn>
+            <AddEmailModal onSuccess={() => setShowAddModal(false)} onUpdate={() => window.location.reload()} />
+          </ModalContent>
+        </ModalOverlay>
       )}
-    </div>
+
+      {showSingleModal && (
+        <ModalOverlay>
+          <ModalContent>
+            <ActionBtn
+              onClick={() => setShowSingleModal(false)}
+              style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', margin: 0 }}
+            >
+              <i className='bx bx-x'></i>
+            </ActionBtn>
+            <SendSingleEmail
+              onSuccess={() => setShowSingleModal(false)}
+              onUpdate={() => { }}
+              email={selectedMail}
+            />
+          </ModalContent>
+        </ModalOverlay>
+      )}
+
+      {showDeleteModal && (
+        <ConfirmationModal
+          item={itemToDelete ? { title: itemToDelete.mail } : null}
+          onDelete={confirmDelete}
+          onCancel={() => setShowDeleteModal(false)}
+        />
+      )}
+    </PageContainer>
   );
 };
-export default Mails
+
+export default Mails;

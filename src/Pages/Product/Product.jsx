@@ -1,85 +1,162 @@
-import {React,useContext,useState,useEffect} from 'react'
-import{useParams} from "react-router-dom"
-import styled from 'styled-components'
-import { useHook } from '../../Hooks/useHook'
-import { LoginContext } from '../../Context/LoginContext'
-import Loading from '../../Components/Loading/Loading'
-const ItemData=styled.div`
-padding-top:50px;
-  width:100vw;
-  justify-content:"space-around";
-  display:flex;
-  flex-direction:row;
-`
-const ItemImage=styled.img`
-    width:400px;
-    height:400px;
-`
-const ItemIm=styled.div`
-    ifont-size:18px;
-`
-const ItemInfo=styled.div`
-padding:40px;
-display:flex;
-flex-direction:column;
-flex:2;
-justify-content:Space-around;
-font-size:30px;
-`
-const ItemName=styled.div`
+import React, { useContext } from 'react';
 
-`
-const Button = styled.a`
-text-decoration:none;
-    font-size:18px;
-    width:150px;
-    height:40px;
-    padding:5px;
-    background-color:white;
-    border:2px solid grey;
-    border-radius:20px;
-    margin:10px;
-    cursor:pointer;
-    color:white;
-    text-align:center;
-    background-color:rgba(114, 49, 235,0.5);
-    &:hover{
-        background-color:rgba(114, 49, 235,0.8)
-    }
-`
-const Product = () => {
-  const {id}=useParams();
-  const [disabled,setDisabled]=useState(false);
-  const [Item,setItem]=useState({});
-  const url=`https://businessmanagementsolutionapi.onrender.com/api/products/find/${id}`
-  const {loginData}=useContext(LoginContext);
-  const [loading,setLoading]=useState(true);
-  const getItem=useHook(url,loginData.accessToken);
-  console.log(getItem);
-  useEffect(()=>{
-    if (getItem) {
-      setItem(getItem);
-      setLoading(false);
-    }
-  },[getItem])
-  if(loading){
-    return (
-      <Loading/>
-    )
+import { useParams, Link } from "react-router-dom";
+import styled from 'styled-components';
+import { useHook } from '../../Hooks/useHook';
+import { LoginContext } from '../../Context/LoginContext';
+import Loading from '../../Components/Loading/Loading';
+
+const PageContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease-out;
+`;
+
+const ProductCard = styled.div`
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  overflow: hidden;
+  margin-top: 2rem;
+
+  @media (max-width: 992px) {
+    flex-direction: column;
   }
+`;
+
+const ImageSection = styled.div`
+  flex: 1;
+  background: var(--bg-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+
+  img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+  }
+`;
+
+const InfoSection = styled.div`
+  flex: 1.2;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+  }
+
+  .price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 2rem;
+  }
+
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+
+    .item {
+      .label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+      .value {
+        font-size: 1rem;
+        color: var(--text-main);
+        font-weight: 600;
+      }
+    }
+  }
+
+  .description {
+    margin-bottom: 2.5rem;
+    .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .text {
+      line-height: 1.6;
+      color: var(--text-main);
+    }
+  }
+`;
+
+const Product = () => {
+  const { id } = useParams();
+  const { loginData } = useContext(LoginContext);
+  const url = `https://businessmanagementsolutionapi.onrender.com/api/products/find/${id}`;
+  const product = useHook(url, loginData?.accessToken);
+
+  if (!product) return <Loading />;
+
   return (
-    <ItemData>
-        <ItemImage src={Item.img}/>
-      <ItemInfo className='bs-red'>
-        <ItemName><b>Name :</b> {Item.title}</ItemName>
-        <ItemName><b>Categories :</b> {Item.categories.map((item)=>{return`${item}, ` })} </ItemName>
-        <ItemName><b>Size :</b> {Item.size} </ItemName>
-        <ItemName><b>Description :</b> {Item.desc} </ItemName>
-        <ItemName><b>Cheapest Price :</b> {Item.price} </ItemName>
-        <ItemName><b>Listed on :</b> {Item.createdAt.substring(0,10)} </ItemName>
-        <ItemName><b>Updated on :</b> {Item.updatedAt.substring(0,10)} </ItemName>
-      </ItemInfo>
-    </ItemData>
-  )
-}
-export default Product
+    <PageContainer>
+      <div className="page-header">
+        <Link to="/products" style={{ color: 'var(--text-muted)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <i className='bx bx-left-arrow-alt'></i> Back to Inventory
+        </Link>
+      </div>
+
+      <ProductCard>
+        <ImageSection>
+          <img src={product.img} alt={product.title} />
+        </ImageSection>
+        <InfoSection>
+          <h1>{product.title}</h1>
+          <div className="price">₹{product.price}</div>
+
+          <div className="details-grid">
+            <div className="item">
+              <div className="label">Categories</div>
+              <div className="value">{product.categories?.join(', ') || 'N/A'}</div>
+            </div>
+            <div className="item">
+              <div className="label">Size</div>
+              <div className="value">{product.size || 'Standard'}</div>
+            </div>
+            <div className="item">
+              <div className="label">Listed Date</div>
+              <div className="value">{product.createdAt?.substring(0, 10)}</div>
+            </div>
+            <div className="item">
+              <div className="label">In Stock</div>
+              <div className="value" style={{ color: 'var(--success)' }}>Yes</div>
+            </div>
+          </div>
+
+          <div className="description">
+            <div className="label">Description</div>
+            <div className="text">{product.desc || 'No description provided.'}</div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '1rem', marginTop: 'auto' }}>
+            <button className="btn btn-primary" style={{ flex: 1 }}>Edit Product</button>
+            <button className="btn" style={{ flex: 1, background: '#fee2e2', color: 'var(--danger)' }}>Delete</button>
+          </div>
+        </InfoSection>
+      </ProductCard>
+    </PageContainer>
+  );
+};
+
+export default Product;

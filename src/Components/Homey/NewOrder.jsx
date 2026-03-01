@@ -1,85 +1,170 @@
-import React, { useContext, useState } from 'react'
-import {useHook} from "../../Hooks/useHook"
-import { LoginContext } from '../../Context/LoginContext';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
-const Div=styled.div`
-  flex:1;
-  height:440px;
-  text-align:center;
-  padding-top:30px;
-`
-const Li=styled.li`
-  display:flex;
-  height:70px;
-  padding-left:10px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  align-content:center;
-  position:relative
-`
-const Img= styled.img`
-  width: 50px;
-  height:50px;
-  border-radius:50%;
-  margin:auto;
-`
-const Ul=styled.ul`
-  list-style:none;
-`
-const Information=styled.div`
-    Justify-content:center;
-    width:${props=>props.width?props.width:""};
-    color:${props=>props.color?props.color:"black"};
-    font-weight:500;
-  margin:auto;
-  display:flex;
-`
-const Button=styled.div`
-  width:40px;
-  height:50px;
-  font-size:40px;
-  margin:auto;
-  color:${props=>props.color?props.color:"black"};
-  &:hover{
-    color:rgba(114, 49, 235,0.8)
-}
-`
-const NewOrder = (props) => {
-    const url="https://businessmanagementsolutionapi.onrender.com/api/order?new=true";
-    
-    const {loginData} = useContext(LoginContext);
+import { useHook } from "../../Hooks/useHook";
+import { LoginContext } from '../../Context/LoginContext';
+import { Link } from 'react-router-dom';
 
-    let acc;
-    if(!loginData){
-        acc=JSON.parse(localStorage.getItem("suviadmin")).accessToken;   
-    }else{
-        acc=loginData.accessToken;
-    } 
+const Container = styled.div`
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  flex: 1;
+`;
 
-    const temp=useHook(url,acc);
-    const data=!temp?[]:temp;
-;
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+  }
+`;
+
+const List = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const OrderItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+
+  &:hover {
+    background: var(--bg-main);
+  }
+
+  .order-info {
+    .order-id {
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.875rem;
+      font-family: monospace;
+    }
+    .amount {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: 0.25rem;
+    }
+  }
+`;
+
+const StatusBadge = styled.span`
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: ${props => {
+    switch (props.status?.toLowerCase()) {
+      case 'pending': return '#fff7ed';
+      case 'approved': return '#ecfdf5';
+      case 'shipped': return '#eff6ff';
+      default: return 'var(--bg-main)';
+    }
+  }};
+  color: ${props => {
+    switch (props.status?.toLowerCase()) {
+      case 'pending': return '#f59e0b';
+      case 'approved': return '#10b981';
+      case 'shipped': return '#3b82f6';
+      default: return 'var(--text-muted)';
+    }
+  }};
+`;
+
+const ActionButtonGroup = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const IconButton = styled.button`
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--bg-main);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+
+  &:hover {
+    background: ${props => props.type === 'approve' ? 'var(--success)' : 'var(--danger)'};
+    color: white;
+  }
+`;
+
+const ViewAllButton = styled(Link)`
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--primary-light);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: var(--transition);
+
+  &:hover {
+    background: var(--primary);
+    color: white;
+  }
+`;
+
+const NewOrder = () => {
+  const { loginData } = useContext(LoginContext);
+  const url = "https://businessmanagementsolutionapi.onrender.com/api/order?new=true";
+  const orders = useHook(url, loginData?.accessToken);
+
+  const displayOrders = orders || [];
+
   return (
-    <Div>
-      <h2>New Orders</h2>
-      <Ul>
-      {data.map((item)=>{
-        return (
-            <Li key={item.id}>
-                <Information width="200px">{item._id}</Information>
-                {props.direction==="row"&& <Information>{item.amount}</Information>}
-                <Information color={item.status==="Pending"?"red":"green"}>{item.status}</Information>
-                <Information width="80px">
-                    <Button color="red" > <i class='bx bxs-x-circle'></i></Button>
-                    <Button color="green"><i class='bx bxs-chevrons-right' ></i></Button>
-                </Information>
+    <Container>
+      <Header>
+        <h3>New Orders</h3>
+        <ViewAllButton to="/orders">View All</ViewAllButton>
+      </Header>
+      <List>
+        {displayOrders.length === 0 ? (
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>No new orders found.</p>
+        ) : (
+          displayOrders.map((item) => (
+            <OrderItem key={item._id}>
+              <div className="order-info">
+                <div className="order-id">#{item._id?.substring(0, 8)}...</div>
+                <div className="amount">${item.amount}</div>
+              </div>
 
-            </Li>
-        )
-      })}
-      </Ul>
-    </Div>
-    
-  )
-}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <StatusBadge status={item.status}>{item.status}</StatusBadge>
+                <ActionButtonGroup>
+                  <IconButton type="reject" title="Cancel Order">
+                    <i className='bx bx-x'></i>
+                  </IconButton>
+                  <IconButton type="approve" title="Process Order">
+                    <i className='bx bx-check' ></i>
+                  </IconButton>
+                </ActionButtonGroup>
+              </div>
+            </OrderItem>
+          ))
+        )}
+      </List>
+    </Container>
+  );
+};
 
-export default NewOrder
+export default NewOrder;

@@ -1,87 +1,204 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
+import styled from 'styled-components';
 import { LoginContext } from '../../Context/LoginContext';
-import "./chart.css";
 import {
   LineChart,
   Line,
   XAxis,
+  YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Area,
+  AreaChart
 } from "recharts";
 import axios from "axios";
 
-const Graph = ({ data, title, dataKey, grid }) => {
-  const {loginData}=useContext(LoginContext);
-  const[predictedData,setPredictedData]=useState(false);
-  const mapIdToMonth = (_id) => {
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    // Subtract 1 from _id to match array index
-    const index = _id -1;
-  
-    // Return month name based on index
-    return monthNames[index];
-  };
-  const pushToFind=async(data,type)=>{
-    console.log(data);
-    //converting the data into data points of a 2d array.
-    const map=[];
-    const find=[];
-    if(type==="login"){
-      data.map((item)=>{
-        map.push([item._id,item.total]);
-        find.push([item._id+1]);
-        return 1; 
-      })
-    }
-    //send the converted data to the api call
-    const url="https://businessmanagementsolutionapi.onrender.com/api/find/predicted"
-    const headers={
-      "token":`Bearer ${loginData.accessToken}`
-    }
-    const payload={
-      twodArray:map,
-      toFind:find
-    }
-    let predicted=await axios.post(url,payload,{headers});
-    console.log(predicted.data);
-    data.map((item,num)=>{
-      console.log(num);
-      if(num===0) return 1;
-      item.predict=Math.round(predicted.data[num-1][1]);
-      return 1;
-    });
-    setPredictedData(true);
+const ChartContainer = styled.div`
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ChartHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
   }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const SmallButton = styled.button`
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  
+  &.primary {
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid transparent;
+    &:hover {
+      background: var(--primary);
+      color: white;
+    }
+  }
+
+  &.secondary {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    &:hover {
+      border-color: var(--text-muted);
+      color: var(--text-main);
+    }
+  }
+`;
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div style={{
+        background: 'white',
+        padding: '0.75rem 1rem',
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius-md)',
+        boxShadow: 'var(--shadow-md)'
+      }}>
+        <p style={{ margin: 0, fontWeight: 700, fontSize: '0.875rem', marginBottom: '0.25rem' }}>{label}</p>
+        {payload.map((entry, index) => (
+          <p key={index} style={{ margin: 0, color: entry.color, fontSize: '0.8125rem', fontWeight: 600 }}>
+            {entry.name}: {entry.value}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
+const Graph = ({ data, title, dataKey, grid }) => {
+  const { loginData } = useContext(LoginContext);
+  const [chartData, setChartData] = useState(data);
+  const [predicting, setPredicting] = useState(false);
+  const [hasPrediction, setHasPrediction] = useState(false);
+
+  const monthNames = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+
+  const mapIdToMonth = (_id) => monthNames[(_id - 1) % 12];
+
+  const handlePredict = async () => {
+    if (hasPrediction || !data || data.length === 0) return;
+
+    setPredicting(true);
+    try {
+      const map = data.map(item => [item._id, item[dataKey]]);
+      const find = data.map(item => [item._id + 1]);
+
+      const response = await axios.post(
+        "https://businessmanagementsolutionapi.onrender.com/api/find/predicted",
+        { twodArray: map, toFind: find },
+        { headers: { "token": `Bearer ${loginData.accessToken}` } }
+      );
+
+      const newData = data.map((item, idx) => ({
+        ...item,
+        predict: idx > 0 ? Math.round(response.data[idx - 1][1]) : null
+      }));
+
+      setChartData(newData);
+      setHasPrediction(true);
+    } catch (err) {
+      console.error("Prediction failed", err);
+    } finally {
+      setPredicting(false);
+    }
+  };
+
   return (
-    <div className="chart-container">
-      <h3 className="chart-title">{title}</h3>
-      <div className="chart-wrapper">
-        <div className="buttons"><button className="button" onClick={()=>pushToFind(data,"login")}>Predict future</button><button className="button">Download Data</button></div>
-        <ResponsiveContainer width={300} height={300}>
-          <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-            <XAxis dataKey="_id" stroke="#5550bd" tickFormatter={mapIdToMonth} />
-            <Line type="monotone" dataKey={dataKey} stroke="#5550bd" strokeWidth={2} dot={{ r:3}} activeDot={{ r: 5}} />
-            {predictedData &&<Line type="monotone" dataKey="predict" stroke="#000" strokeWidth={2} dot={{ r:3}} activeDot={{ r: 5}} />}
-            <Tooltip cursor={{ stroke: '#5550bd', strokeWidth: 1 }} contentStyle={{ backgroundColor: '#fff' }} />
-            {grid && <CartesianGrid stroke="#e0dfdf" strokeDasharray="5 5" />}
-          </LineChart>
+    <ChartContainer>
+      <ChartHeader>
+        <h3>{title}</h3>
+        <ButtonGroup>
+          <SmallButton className="primary" onClick={handlePredict} disabled={predicting}>
+            {predicting ? 'Wait...' : 'Predict Future'}
+          </SmallButton>
+          <SmallButton className="secondary">Export</SmallButton>
+        </ButtonGroup>
+      </ChartHeader>
+
+      <div style={{ width: '100%', height: 300 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.1} />
+                <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+            <XAxis
+              dataKey="_id"
+              tickFormatter={mapIdToMonth}
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+              dy={10}
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Area
+              type="monotone"
+              dataKey={dataKey}
+              name={title}
+              stroke="var(--primary)"
+              strokeWidth={3}
+              fillOpacity={1}
+              fill="url(#colorValue)"
+              dot={{ r: 4, fill: 'white', strokeWidth: 2, stroke: 'var(--primary)' }}
+              activeDot={{ r: 6, strokeWidth: 0 }}
+            />
+            {hasPrediction && (
+              <Line
+                type="monotone"
+                dataKey="predict"
+                name="Prediction"
+                stroke="var(--success)"
+                strokeWidth={2}
+                strokeDasharray="5 5"
+                dot={false}
+              />
+            )}
+          </AreaChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </ChartContainer>
   );
 };
 

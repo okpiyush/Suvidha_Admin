@@ -1,78 +1,100 @@
-import React, { useContext,useEffect,useState  } from 'react'
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import Graph from './Graph';
 import Summary from './Summary';
-import "./chart.css"
 import NewUser from './NewUser';
 import NewOrder from './NewOrder';
-import { useHook} from '../../Hooks/useHook';
+import { useHook } from '../../Hooks/useHook';
 import { LoginContext } from '../../Context/LoginContext';
-const Wrapper=styled.div`
-  width: ${props=>props.direction?"90vw":"100vw"};
-  display:flex;
-  flex-direction:${props=>props.direction?props.direction:"column"};
-  justify-content:space-around;
-  align-items:center;
-  overflow:auto;
-  padding-top:60px;
-`
-const New= styled.div`
-  width:98vw;
+
+const DashboardContainer = styled.div`
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  animation: fadeIn 0.4s ease-out;
+`;
+
+const SectionHeader = styled.div`
+  margin-top: 1rem;
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1.5rem;
+  }
+`;
+
+const ChartsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
   
-  display:flex;
-  flex-direction:${props=>props.direction?props.direction:"column"};
-  justify-content:space-around;
-  align-items:center;
-  overflow:auto;
-`
-const NewOrders=styled.div``
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+`;
 
-const Homey = (props) => {
-  const {loginData}=useContext(LoginContext);
-  const url="https://businessmanagementsolutionapi.onrender.com/api/users/stats"
-  const url1="https://businessmanagementsolutionapi.onrender.com/api/products/stats"
-  const temp=useHook(url,loginData.accessToken);
-  const temp1=useHook(url1,loginData.accessToken);
-  const userData=!temp?[]:temp;
-  const productData=!temp1?[]:temp1;
-  console.log(productData);
-  const sortedUserData = userData.slice().sort((a, b) => a._id - b._id);
-  const sortedProductData=productData.slice().sort((a, b) => a._id - b._id);
-  const [direction, setDirection] = useState('row');
+const ListsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 1.5rem;
 
-  useEffect(() => {
-    // Function to update the direction based on the device width
-    const handleDirectionChange = () => {
-      const isMobile = window.matchMedia('(max-width: 767px)').matches;
-      setDirection(isMobile ? 'column' : 'row');
-    };
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+`;
 
-    // Set initial direction on component mount
-    handleDirectionChange();
+const Homey = () => {
+  const { loginData } = useContext(LoginContext);
 
-    // Add event listener for direction change on window resize
-    window.addEventListener('resize', handleDirectionChange);
+  // Data URLs
+  const userStatsUrl = "https://businessmanagementsolutionapi.onrender.com/api/users/stats";
+  const productStatsUrl = "https://businessmanagementsolutionapi.onrender.com/api/products/stats";
 
-    // Clean up event listener on component unmount
-    return () => {
-      window.removeEventListener('resize', handleDirectionChange);
-    };
-  }, []);
+  // Fetch data
+  const userStats = useHook(userStatsUrl, loginData?.accessToken);
+  const productStats = useHook(productStatsUrl, loginData?.accessToken);
+
+  // Process data (sort by month ID)
+  const sortedUserStats = (userStats || []).slice().sort((a, b) => a._id - b._id);
+  const sortedProductStats = (productStats || []).slice().sort((a, b) => a._id - b._id);
+
   return (
-    <Wrapper>
-      <Summary/>
-      {/* total sales graph */}
-      <Wrapper className="shadow" direction={direction}>
-        <Graph data={sortedUserData} title="User Analytics" grid dataKey="total"/>
-        <Graph data={sortedProductData} title="Products Added" grid dataKey="total"/>
-        <Graph data={sortedUserData} title="sales" grid dataKey="total"/>
-      </Wrapper>
-      <New className='shadow' direction={direction}>
-          <NewUser direction={direction}/>
-          <NewOrder direction={direction}/>
-      </New>
-    </Wrapper>
-  )
-}
+    <DashboardContainer>
+      <Summary />
+
+      <SectionHeader>
+        <h3>Performance Insights</h3>
+        <ChartsGrid>
+          <Graph
+            data={sortedUserStats}
+            title="User Growth"
+            dataKey="total"
+            grid
+          />
+          <Graph
+            data={sortedProductStats}
+            title="Inventory Analytics"
+            dataKey="total"
+            grid
+          />
+        </ChartsGrid>
+      </SectionHeader>
+
+      <SectionHeader>
+        <h3>Real-time Activities</h3>
+        <ListsGrid>
+          <NewUser />
+          <NewOrder />
+        </ListsGrid>
+      </SectionHeader>
+
+      {/* Spacer for bottom padding */}
+      <div style={{ height: '2rem' }} />
+    </DashboardContainer>
+  );
+};
 
 export default Homey;

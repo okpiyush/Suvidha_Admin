@@ -1,158 +1,217 @@
-import {React,useContext,useState,useEffect} from 'react'
-import styled from 'styled-components'
-import { useHook } from '../../Hooks/useHook'
-import { LoginContext } from '../../Context/LoginContext'
-import Loading from '../../Components/Loading/Loading'
-import AddProductModal from '../../Components/Modals/AddProductModal'
-import ConfirmationModal from '../../Components/Modals/confirmationModal'
-import axios from 'axios'
-import LogModal from '../../Components/Modals/LogModal'
-import Log from './Log'
-const Div=styled.div`
-  margin-top:30px;
-  flex:1;
-  text-align:center;
-  padding-top:30px;
-`
-const Li=styled.li`
-  border-radius:3px 0px 0px 3px;
-  border-left:3px solid rgb(107, 60, 192) ;
-  margin:5px;
-  display:flex;
-  height:70px;
-  ${'' /* width:700px; */}
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  align-content:center;
-  justify-content:space-between;
-`
-const Img= styled.img`
-  width: 50px;
-  height:50px;
-  border-radius:50%;
-  margin:auto;
-`
-const Ul=styled.ul`
-  list-style:none;
-`
-const Information=styled.div`
-    Justify-content:center;
-    width:${props=>props.width?props.width:""};
-  margin:auto;
-  display:flex;
-`
-const Button=styled.a`
-  width:50px;
-  height:50px;
-  font-size:40px;
-  margin:auto;
-  color:${props=>props.color?props.color:"black"};
-  &:hover{
-    color:rgba(114, 49, 235,0.8)
-}
-`
-const Deev=styled.div`
-  width:96vw;
-  display:flex;
-  font-size:40px;
-  color:${props=>props.color?props.color:"black"};
-  margin:auto;
-  flex-direction:row;
-  justify-content:space-around;
-`
-const Button1=styled.a`
-  width:200px;
-  text-decoration :none;
-  ${'' /* background-color:black; */}
-  height:50px;
-  font-size:20px;
-  color:${props=>props.color?props.color:"black"};
-  &:hover{
-    color:rgba(114, 49, 235,0.8)
-}
-`
-const Modal=styled.div`
-    position: fixed;
-    background-color:#e8e8e8;
-    height:450px;
-    width:400px;
-    top: 20%;
-    left: 35%;
-    z-index:2;
-    box-shadow: 7px 1px 41px -2px rgba(0,0,0,0.56);
-`
-const Button2=styled.a`
-  text-decoration :none;
-  ${'' /* background-color:black; */}
-  width:120px;
-  font-size:30px;
-    align-content:center;
-  color:${props=>props.color?props.color:"black"};
-  &:hover{
-    color:rgba(114, 49, 235,0.8)
-}
-`
-const Wow=styled.div`
-display:flex;
-justify-content:right;
-`
+import React, { useContext, useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { LoginContext } from '../../Context/LoginContext';
+import Loading from '../../Components/Loading/Loading';
+import axios from 'axios';
+import LogModal from '../../Components/Modals/LogModal';
 
+const PageContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease-out;
+`;
 
-
-// 
-const Logs= () => {
-  const url = 'https://businessmanagementsolutionapi.onrender.com/api/auth/getallip';
-  const [loading, setLoading] = useState(true);
-  const { loginData } = useContext(LoginContext);
-  const [showModalData, setShowModal] = useState(false);
-  const [showModal1, setShowModal1] = useState(false);
-  const [data, setData] = useState(null);
-  const handleShowModal1=(ip)=>{
-    console.log(ip);
-    setShowModal1(!showModal1);
-    setShowModal(ip);
+const PageHeader = styled.div`
+  margin-bottom: 2rem;
+  
+  h1 {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: var(--text-main);
   }
-  useEffect(()=>{
-    const getset = async ()=>{
-        try{
-            const headers= {
-                "token":`Bearer ${loginData.accessToken}`
-            }
-            const reso=await axios.get(url,{headers});
-            setData(reso.data);
-            setLoading(false);
-        }catch(Err){
-            console.log("error occired")
-        }
-    }
-    getset();
-  },[loginData]);
+`;
+
+const TableCard = styled.div`
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+`;
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th {
+    background: var(--bg-main);
+    padding: 1rem 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.875rem;
+    color: var(--text-main);
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover {
+    background: var(--bg-main);
+  }
+`;
+
+const IpBadge = styled.code`
+  background: var(--bg-main);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  font-weight: 600;
+  font-family: inherit;
+`;
+
+const ActionBtn = styled.button`
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text-main);
+
+  &:hover {
+    background: var(--bg-main);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-1px);
+  }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+`;
+
+const ModalContent = styled.div`
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 450px;
+  padding: 2.5rem;
+  position: relative;
+  box-shadow: var(--shadow-xl);
+  animation: slideUp 0.3s ease-out;
+`;
+
+const Logs = () => {
+  const url = 'https://businessmanagementsolutionapi.onrender.com/api/auth/getallip';
+  const { loginData } = useContext(LoginContext);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [selectedIp, setSelectedIp] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!loginData?.accessToken) return;
+      try {
+        const headers = { token: `Bearer ${loginData.accessToken}` };
+        const response = await axios.get(url, { headers });
+        setData(response.data);
+      } catch (err) {
+        console.error("Error fetching logs:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [loginData]);
+
+  const handleInfoClick = (ip) => {
+    setSelectedIp(ip);
+    setShowModal(true);
+  };
+
+  if (loading) return <Loading />;
+
   return (
-    <div>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Div>
-          {
-            showModal1?(<Modal><Wow><Button2 onClick={handleShowModal1}><i class='bx bx-x-circle'></i></Button2></Wow><LogModal ip={showModalData}/></Modal> ):(<div></div>)
-          }
-          <Deev>
-            <h2>All Admin Login</h2>
-          </Deev>
-          <Ul>
-            {data.map((item) => (
-                <Li>
-                    <Information width="200px">{item.Logs}</Information>
-                    <Information width="150px">{item.createdAt.substring(0,10)}</Information>
-                    <Information width="150px">{item.createdAt.substring(11,19)}</Information>
-                    <Button2 onClick={()=>handleShowModal1(item.Logs)}><i class='bx bxs-info-square' ></i></Button2>
-                </Li>
+    <PageContainer>
+      <PageHeader>
+        <h1>Security Reports</h1>
+        <p style={{ color: 'var(--text-muted)' }}>Monitor administrative access and login attempts</p>
+      </PageHeader>
+
+      <TableCard>
+        <Table>
+          <thead>
+            <tr>
+              <th>IP Address / Log</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <tr key={index}>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <IpBadge>{item.Logs}</IpBadge>
+                  </div>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
+                    <i className='bx bx-calendar'></i>
+                    {item.createdAt.substring(0, 10)}
+                  </div>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
+                    <i className='bx bx-time'></i>
+                    {item.createdAt.substring(11, 19)}
+                  </div>
+                </td>
+                <td>
+                  <ActionBtn onClick={() => handleInfoClick(item.Logs)}>
+                    <i className='bx bx-info-circle'></i>
+                  </ActionBtn>
+                </td>
+              </tr>
             ))}
-          </Ul>
-        </Div>
+          </tbody>
+        </Table>
+      </TableCard>
+
+      {showModal && (
+        <ModalOverlay>
+          <ModalContent>
+            <ActionBtn
+              onClick={() => setShowModal(false)}
+              style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', margin: 0 }}
+            >
+              <i className='bx bx-x'></i>
+            </ActionBtn>
+            <LogModal ip={selectedIp} />
+          </ModalContent>
+        </ModalOverlay>
       )}
-    </div>
+    </PageContainer>
   );
 };
 
-
-export default Logs
+export default Logs;

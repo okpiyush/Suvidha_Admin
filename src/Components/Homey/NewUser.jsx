@@ -1,82 +1,144 @@
-import React, { useContext, useState } from 'react'
-import {useHook} from "../../Hooks/useHook"
-import { LoginContext } from '../../Context/LoginContext';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
-const Div=styled.div`
-  flex:1;
-  text-align:center;
-  padding-top:30px;
-`
-const Li=styled.li`
-padding-left:10px;
-display:flex;
-  height:70px;
-  ${'' /* width:700px; */}
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  align-content:center;
-  position:relative
-`
-const Img= styled.img`
-  width: 50px;
-  height:50px;
-  border-radius:50%;
-  margin:auto;
-`
-const Ul=styled.ul`
-  list-style:none;
-`
-const Information=styled.div`
-    Justify-content:center;
-    width:${props=>props.width?props.width:""};
-  margin:auto;
-  display:flex;
-`
-const Button=styled.a`
-  width:50px;
-  height:50px;
-  font-size:40px;
-  margin:auto;
-  color:${props=>props.color?props.color:"black"};
-  &:hover{
-    color:rgba(114, 49, 235,0.8)
-}
-`
-const NewUser = (props) => {
-    const url="https://businessmanagementsolutionapi.onrender.com/api/users?new=true";
-    
-    const {loginData} = useContext(LoginContext);
- 
-    let acc;
-    if(!loginData){
-        acc=JSON.parse(localStorage.getItem("suviadmin"));   
-    }else{
-        acc=loginData;
-    } 
+import { useHook } from "../../Hooks/useHook";
+import { LoginContext } from '../../Context/LoginContext';
+import { Link } from 'react-router-dom';
 
-    const temp=useHook(url,acc.accessToken);
-    const data=!temp?[]:temp;
+const Container = styled.div`
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  flex: 1;
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+  }
+`;
+
+const List = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const UserItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+
+  &:hover {
+    background: var(--bg-main);
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      i {
+        color: var(--primary);
+        font-size: 1.25rem;
+      }
+    }
+
+    .details {
+      .name {
+        font-weight: 600;
+        color: var(--text-main);
+        font-size: 0.9375rem;
+      }
+      .date {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+    }
+  }
+`;
+
+const ViewButton = styled(Link)`
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--primary-light);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: var(--transition);
+
+  &:hover {
+    background: var(--primary);
+    color: white;
+  }
+`;
+
+const NewUser = () => {
+  const { loginData } = useContext(LoginContext);
+  const url = "https://businessmanagementsolutionapi.onrender.com/api/users?new=true";
+  const users = useHook(url, loginData?.accessToken);
+
+  const displayUsers = users || [];
 
   return (
-    <Div>
-      <h2>New Users</h2>
-      <Ul>
-      {data.map((item)=>{
-        return <Li key={item.id}>
-        <Img src={item.img} alt="userImage"/>
-        <Information width="150px">{item.username}</Information> 
-        {props.direction==="row"&&<Information width="220px">{item.email}</Information>}
-        <Information>{item.createdAt.substring(0,10)}</Information> 
-        <Information>
-          <Button href={`/users/${item._id}`} color="green">
-            <i class='bx bx-window-open' ></i>
-          </Button>
-          </Information>
-      </Li>
-      })}
-      </Ul>
-    </Div>
-    
-  )
-}
+    <Container>
+      <Header>
+        <h3>New Users</h3>
+        <ViewButton to="/users" className="secondary">View All</ViewButton>
+      </Header>
+      <List>
+        {displayUsers.length === 0 ? (
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>No new users found.</p>
+        ) : (
+          displayUsers.map((item) => (
+            <UserItem key={item._id}>
+              <div className="user-info">
+                <div className="avatar">
+                  {item.img ? <img src={item.img} alt={item.username} /> : <i className='bx bxs-user'></i>}
+                </div>
+                <div className="details">
+                  <div className="name">{item.username}</div>
+                  <div className="date">Joined {item.createdAt?.substring(0, 10)}</div>
+                </div>
+              </div>
+              <ViewButton to={`/users/${item._id}`}>
+                View
+              </ViewButton>
+            </UserItem>
+          ))
+        )}
+      </List>
+    </Container>
+  );
+};
 
-export default NewUser
+export default NewUser;
