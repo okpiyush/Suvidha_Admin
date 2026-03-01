@@ -4,6 +4,7 @@ import { LoginContext } from '../../Context/LoginContext';
 import Loading from '../../Components/Loading/Loading';
 import axios from 'axios';
 import LogModal from '../../Components/Modals/LogModal';
+import { API_BASE_URL } from "../../config";
 
 const PageContainer = styled.div`
   max-width: 1200px;

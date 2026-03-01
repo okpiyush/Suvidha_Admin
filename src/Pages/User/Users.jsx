@@ -107,7 +107,7 @@ const ActionBtn = styled(Link)`
 `;
 
 export const Users = () => {
-  const url = "http://localhost:5005/api/users";
+  const url = `${API_BASE_URL}/users`;
   const { loginData } = useContext(LoginContext);
   const users = useHook(url, loginData?.accessToken);
 
@@ -214,7 +214,7 @@ const UserProfileCard = styled.div`
 export const User = () => {
   const { id } = useParams();
   const { loginData } = useContext(LoginContext);
-  const url = `http://localhost:5005/api/users/find/${id}`;
+  const url = `${API_BASE_URL}/users/find/${id}`;
   const user = useHook(url, loginData?.accessToken);
 
   if (!user) return <Loading />;

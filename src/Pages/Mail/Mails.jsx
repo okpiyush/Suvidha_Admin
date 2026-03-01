@@ -134,7 +134,7 @@ const ModalContent = styled.div`
 `;
 
 const Mails = () => {
-  const url = 'http://localhost:5005/api/mail/getmails/';
+  const url = `${API_BASE_URL}/mail/getmails/`;
   const { loginData } = useContext(LoginContext);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showSingleModal, setShowSingleModal] = useState(false);
@@ -160,7 +160,7 @@ const Mails = () => {
 
   const confirmDelete = async () => {
     if (!itemToDelete) return;
-    const deleteUrl = `http://localhost:5005/api/mail/delete/${itemToDelete._id}`;
+    const deleteUrl = `${API_BASE_URL}/mail/delete/${itemToDelete._id}`;
     try {
       await axios.delete(deleteUrl);
       setData(data.filter(item => item._id !== itemToDelete._id));

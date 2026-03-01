@@ -6,6 +6,7 @@ import NewUser from './NewUser';
 import NewOrder from './NewOrder';
 import { useHook } from '../../Hooks/useHook';
 import { LoginContext } from '../../Context/LoginContext';
+import { API_BASE_URL } from "../../config";
 
 const DashboardContainer = styled.div`
   max-width: 1400px;

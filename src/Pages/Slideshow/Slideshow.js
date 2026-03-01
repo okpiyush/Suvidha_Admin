@@ -163,7 +163,7 @@ const Slideshow = () => {
 
   const confirmDelete = async () => {
     if (!itemToDelete) return;
-    const deleteUrl = `http://localhost:5005/api/slideshow/delete/${itemToDelete._id}`;
+    const deleteUrl = `${API_BASE_URL}/slideshow/delete/${itemToDelete._id}`;
     try {
       const headers = { token: `Bearer ${loginData.accessToken}` };
       await axios.delete(deleteUrl, { headers });

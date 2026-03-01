@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { LoginContext } from '../../Context/LoginContext';
 import { useHook } from '../../Hooks/useHook';
+import { API_BASE_URL } from '../../config';
 
 const StatsGrid = styled.div`
   display: grid;
@@ -68,66 +69,66 @@ const WelcomeHeader = styled.div`
 `;
 
 const Summary = () => {
-    const { loginData } = useContext(LoginContext);
+  const { loginData } = useContext(LoginContext);
 
-    // Fetch individual stats
-    const usersData = useHook("http://localhost:5005/api/users", loginData?.accessToken);
-    const productsData = useHook("http://localhost:5005/api/products/", loginData?.accessToken);
-    const ordersData = useHook("http://localhost:5005/api/order/", loginData?.accessToken);
+  // Fetch individual stats
+  const usersData = useHook(`${API_BASE_URL}/users`, loginData?.accessToken);
+  const productsData = useHook(`${API_BASE_URL}/products/`, loginData?.accessToken);
+  const ordersData = useHook(`${API_BASE_URL}/order/`, loginData?.accessToken);
 
-    const stats = [
-        {
-            label: 'Total Users',
-            value: usersData ? usersData.length : '...',
-            icon: 'bx bxs-group',
-            bg: '#eff6ff',
-            color: '#3b82f6'
-        },
-        {
-            label: 'Active Products',
-            value: productsData ? productsData.length : '...',
-            icon: 'bx bxs-box',
-            bg: '#fdf2f8',
-            color: '#ec4899'
-        },
-        {
-            label: 'Total Orders',
-            value: ordersData ? ordersData.length : '...',
-            icon: 'bx bxs-shopping-bag',
-            bg: '#ecfdf5',
-            color: '#10b981'
-        },
-        {
-            label: 'Pending Requests',
-            value: '12', // Mocked as requested feature cleanup/refinement
-            icon: 'bx bxs-hourglass-bottom',
-            bg: '#fff7ed',
-            color: '#f59e0b'
-        }
-    ];
+  const stats = [
+    {
+      label: 'Total Users',
+      value: usersData ? usersData.length : '...',
+      icon: 'bx bxs-group',
+      bg: '#eff6ff',
+      color: '#3b82f6'
+    },
+    {
+      label: 'Active Products',
+      value: productsData ? productsData.length : '...',
+      icon: 'bx bxs-box',
+      bg: '#fdf2f8',
+      color: '#ec4899'
+    },
+    {
+      label: 'Total Orders',
+      value: ordersData ? ordersData.length : '...',
+      icon: 'bx bxs-shopping-bag',
+      bg: '#ecfdf5',
+      color: '#10b981'
+    },
+    {
+      label: 'Pending Requests',
+      value: '12', // Mocked as requested feature cleanup/refinement
+      icon: 'bx bxs-hourglass-bottom',
+      bg: '#fff7ed',
+      color: '#f59e0b'
+    }
+  ];
 
-    return (
-        <>
-            <WelcomeHeader>
-                <h2>Welcome back, {loginData?.username || 'Admin'}</h2>
-                <p>Here is what's happening with your business today.</p>
-            </WelcomeHeader>
+  return (
+    <>
+      <WelcomeHeader>
+        <h2>Welcome back, {loginData?.username || 'Admin'}</h2>
+        <p>Here is what's happening with your business today.</p>
+      </WelcomeHeader>
 
-            <StatsGrid>
-                {stats.map((stat, index) => (
-                    <StatCard key={index} bg={stat.bg} color={stat.color}>
-                        <div className="icon">
-                            <i className={stat.icon}></i>
-                        </div>
-                        <div className="content">
-                            <div className="label">{stat.label}</div>
-                            <div className="value">{stat.value}</div>
-                        </div>
-                    </StatCard>
-                ))}
-            </StatsGrid>
-        </>
-    );
+      <StatsGrid>
+        {stats.map((stat, index) => (
+          <StatCard key={index} bg={stat.bg} color={stat.color}>
+            <div className="icon">
+              <i className={stat.icon}></i>
+            </div>
+            <div className="content">
+              <div className="label">{stat.label}</div>
+              <div className="value">{stat.value}</div>
+            </div>
+          </StatCard>
+        ))}
+      </StatsGrid>
+    </>
+  );
 };
 
 export default Summary;

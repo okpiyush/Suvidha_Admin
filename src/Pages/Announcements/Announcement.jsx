@@ -134,7 +134,7 @@ const ModalContent = styled.div`
 `;
 
 const Announcements = () => {
-  const url = 'http://localhost:5005/api/announcement/getall';
+  const url = `${API_BASE_URL}/announcement/getall`;
   const { loginData } = useContext(LoginContext);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);

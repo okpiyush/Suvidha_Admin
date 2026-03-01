@@ -104,7 +104,7 @@ const InfoSection = styled.div`
 const Product = () => {
   const { id } = useParams();
   const { loginData } = useContext(LoginContext);
-  const url = `http://localhost:5005/api/products/find/${id}`;
+  const url = `${API_BASE_URL}/products/find/${id}`;
   const product = useHook(url, loginData?.accessToken);
 
   if (!product) return <Loading />;

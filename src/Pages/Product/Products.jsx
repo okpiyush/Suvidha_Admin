@@ -141,7 +141,7 @@ const Products = () => {
   const confirmDelete = async () => {
     if (!itemToDelete) return;
     try {
-      await axios.delete(`http://localhost:5005/api/products/${itemToDelete._id}`, {
+      await axios.delete(`${API_BASE_URL}/products/${itemToDelete._id}`, {
         headers: { "token": `Bearer ${loginData.accessToken}` }
       });
       setData(data.filter(item => item._id !== itemToDelete._id));

@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import styled from 'styled-components';
 import { LoginContext } from '../../Context/LoginContext';
+import { API_BASE_URL } from "../../config";
 import {
   LineChart,
   Line,
@@ -118,7 +119,7 @@ const Graph = ({ data, title, dataKey, grid }) => {
       const find = data.map(item => [item._id + 1]);
 
       const response = await axios.post(
-        "http://localhost:5005/api/find/predicted",
+        `${API_BASE_URL}/find/predicted`,
         { twodArray: map, toFind: find },
         { headers: { "token": `Bearer ${loginData.accessToken}` } }
       );
