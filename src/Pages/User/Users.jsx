@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useHook } from '../../Hooks/useHook';
 import { LoginContext } from '../../Context/LoginContext';
 import Loading from '../../Components/Loading/Loading';
+import { API_BASE_URL } from '../../config';
 
 const PageContainer = styled.div`
   max-width: 1200px;

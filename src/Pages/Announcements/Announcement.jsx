@@ -7,6 +7,7 @@ import ConfirmationModal from '../../Components/Modals/confirmationModal';
 import axios from 'axios';
 import SeeAnnouncements from '../../Components/Modals/SeeAnnouncements';
 import NewAnnouncement from '../../Components/Modals/NewAnnouncement';
+import { API_BASE_URL } from '../../config';
 
 const PageContainer = styled.div`
   max-width: 1200px;
@@ -160,7 +161,7 @@ const Announcements = () => {
 
   const confirmDelete = async () => {
     if (!itemToDelete) return;
-    const deleteUrl = `http://localhost:5005/api/announcement/delete/${itemToDelete._id}`;
+    const deleteUrl = `${API_BASE_URL}/announcement/delete/${itemToDelete._id}`;
     try {
       const headers = { token: `Bearer ${loginData.accessToken}` };
       await axios.delete(deleteUrl, { headers });

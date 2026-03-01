@@ -7,6 +7,7 @@ import Loading from '../../Components/Loading/Loading';
 import AddProductModal from '../../Components/Modals/AddProductModal';
 import ConfirmationModal from '../../Components/Modals/confirmationModal';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 
 const PageContainer = styled.div`
   max-width: 1200px;
@@ -116,7 +117,7 @@ const ModalContent = styled.div`
 `;
 
 const Products = () => {
-  const url = 'http://localhost:5005/api/products/';
+  const url = `${API_BASE_URL}/products/`;
   const { loginData } = useContext(LoginContext);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

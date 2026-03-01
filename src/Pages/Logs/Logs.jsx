@@ -120,7 +120,7 @@ const ModalContent = styled.div`
 `;
 
 const Logs = () => {
-  const url = 'http://localhost:5005/api/auth/getallip';
+  const url = `${API_BASE_URL}/auth/getallip`;
   const { loginData } = useContext(LoginContext);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -141,7 +141,7 @@ const Logs = () => {
       }
     };
     fetchData();
-  }, [loginData]);
+  }, [loginData, url]);
 
   const handleInfoClick = (ip) => {
     setSelectedIp(ip);

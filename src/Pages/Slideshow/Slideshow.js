@@ -5,6 +5,7 @@ import { LoginContext } from "../../Context/LoginContext";
 import Loading from "../../Components/Loading/Loading";
 import ConfirmationModal from "../../Components/Modals/confirmationModal";
 import axios from "axios";
+import { API_BASE_URL } from "../../config";
 import SeeAnnouncements from "../../Components/Modals/SeeAnnouncements";
 import AddSlideModal from "../../Components/Modals/AddSlideMoal";
 
@@ -137,7 +138,7 @@ const ModalContent = styled.div`
 `;
 
 const Slideshow = () => {
-  const url = "http://localhost:5005/api/slideshow/";
+  const url = `${API_BASE_URL}/slideshow/`;
   const { loginData } = useContext(LoginContext);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);

@@ -7,6 +7,7 @@ import AddEmailModal from '../../Components/Modals/AddEmailModal';
 import ConfirmationModal from '../../Components/Modals/confirmationModal';
 import SendSingleEmail from "../../Components/Modals/SendSingleEmail";
 import axios from 'axios';
+import { API_BASE_URL } from "../../config";
 
 const PageContainer = styled.div`
   max-width: 1200px;
