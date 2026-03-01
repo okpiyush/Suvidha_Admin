@@ -174,7 +174,7 @@ const NewAnnouncement = ({ onSuccess, onUpdate }) => {
         };
 
         const headers = { "token": `Bearer ${loginData.accessToken}` };
-        const url = "https://businessmanagementsolutionapi.onrender.com/api/announcement/";
+        const url = "http://localhost:5005/api/announcement/";
 
         try {
             const response = await axios.post(url, payload, { headers });

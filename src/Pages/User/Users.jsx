@@ -107,7 +107,7 @@ const ActionBtn = styled(Link)`
 `;
 
 export const Users = () => {
-  const url = "https://businessmanagementsolutionapi.onrender.com/api/users";
+  const url = "http://localhost:5005/api/users";
   const { loginData } = useContext(LoginContext);
   const users = useHook(url, loginData?.accessToken);
 
@@ -214,7 +214,7 @@ const UserProfileCard = styled.div`
 export const User = () => {
   const { id } = useParams();
   const { loginData } = useContext(LoginContext);
-  const url = `https://businessmanagementsolutionapi.onrender.com/api/users/find/${id}`;
+  const url = `http://localhost:5005/api/users/find/${id}`;
   const user = useHook(url, loginData?.accessToken);
 
   if (!user) return <Loading />;

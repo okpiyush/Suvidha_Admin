@@ -50,8 +50,8 @@ const Homey = () => {
   const { loginData } = useContext(LoginContext);
 
   // Data URLs
-  const userStatsUrl = "https://businessmanagementsolutionapi.onrender.com/api/users/stats";
-  const productStatsUrl = "https://businessmanagementsolutionapi.onrender.com/api/products/stats";
+  const userStatsUrl = "http://localhost:5005/api/users/stats";
+  const productStatsUrl = "http://localhost:5005/api/products/stats";
 
   // Fetch data
   const userStats = useHook(userStatsUrl, loginData?.accessToken);

@@ -116,7 +116,7 @@ const ModalContent = styled.div`
 `;
 
 const Products = () => {
-  const url = 'https://businessmanagementsolutionapi.onrender.com/api/products/';
+  const url = 'http://localhost:5005/api/products/';
   const { loginData } = useContext(LoginContext);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -141,7 +141,7 @@ const Products = () => {
   const confirmDelete = async () => {
     if (!itemToDelete) return;
     try {
-      await axios.delete(`https://businessmanagementsolutionapi.onrender.com/api/products/${itemToDelete._id}`, {
+      await axios.delete(`http://localhost:5005/api/products/${itemToDelete._id}`, {
         headers: { "token": `Bearer ${loginData.accessToken}` }
       });
       setData(data.filter(item => item._id !== itemToDelete._id));

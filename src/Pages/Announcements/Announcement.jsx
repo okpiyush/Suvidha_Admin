@@ -134,7 +134,7 @@ const ModalContent = styled.div`
 `;
 
 const Announcements = () => {
-  const url = 'https://businessmanagementsolutionapi.onrender.com/api/announcement/getall';
+  const url = 'http://localhost:5005/api/announcement/getall';
   const { loginData } = useContext(LoginContext);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
@@ -160,7 +160,7 @@ const Announcements = () => {
 
   const confirmDelete = async () => {
     if (!itemToDelete) return;
-    const deleteUrl = `https://businessmanagementsolutionapi.onrender.com/api/announcement/delete/${itemToDelete._id}`;
+    const deleteUrl = `http://localhost:5005/api/announcement/delete/${itemToDelete._id}`;
     try {
       const headers = { token: `Bearer ${loginData.accessToken}` };
       await axios.delete(deleteUrl, { headers });

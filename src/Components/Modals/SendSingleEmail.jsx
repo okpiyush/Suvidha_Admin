@@ -148,7 +148,7 @@ const SendSingleEmail = ({ email, onSuccess, onUpdate }) => {
         };
 
         const headers = { "token": `Bearer ${loginData.accessToken}` };
-        const url = "https://businessmanagementsolutionapi.onrender.com/api/mail/sendmail";
+        const url = "http://localhost:5005/api/mail/sendmail";
 
         try {
             await axios.post(url, payload, { headers });

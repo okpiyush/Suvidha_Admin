@@ -118,7 +118,7 @@ const Graph = ({ data, title, dataKey, grid }) => {
       const find = data.map(item => [item._id + 1]);
 
       const response = await axios.post(
-        "https://businessmanagementsolutionapi.onrender.com/api/find/predicted",
+        "http://localhost:5005/api/find/predicted",
         { twodArray: map, toFind: find },
         { headers: { "token": `Bearer ${loginData.accessToken}` } }
       );

@@ -104,7 +104,7 @@ const InfoSection = styled.div`
 const Product = () => {
   const { id } = useParams();
   const { loginData } = useContext(LoginContext);
-  const url = `https://businessmanagementsolutionapi.onrender.com/api/products/find/${id}`;
+  const url = `http://localhost:5005/api/products/find/${id}`;
   const product = useHook(url, loginData?.accessToken);
 
   if (!product) return <Loading />;

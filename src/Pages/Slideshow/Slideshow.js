@@ -137,7 +137,7 @@ const ModalContent = styled.div`
 `;
 
 const Slideshow = () => {
-  const url = "https://businessmanagementsolutionapi.onrender.com/api/slideshow/";
+  const url = "http://localhost:5005/api/slideshow/";
   const { loginData } = useContext(LoginContext);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
@@ -163,7 +163,7 @@ const Slideshow = () => {
 
   const confirmDelete = async () => {
     if (!itemToDelete) return;
-    const deleteUrl = `https://businessmanagementsolutionapi.onrender.com/api/slideshow/delete/${itemToDelete._id}`;
+    const deleteUrl = `http://localhost:5005/api/slideshow/delete/${itemToDelete._id}`;
     try {
       const headers = { token: `Bearer ${loginData.accessToken}` };
       await axios.delete(deleteUrl, { headers });

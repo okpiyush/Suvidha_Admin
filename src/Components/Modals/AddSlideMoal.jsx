@@ -205,7 +205,7 @@ const AddSlideModal = ({ onSuccess, onUpdate }) => {
 
   const handleCreate = async () => {
     setLoading(true);
-    const url = "https://businessmanagementsolutionapi.onrender.com/api/slideshow/";
+    const url = "http://localhost:5005/api/slideshow/";
     const headers = { "token": `Bearer ${loginData.accessToken}` };
 
     try {

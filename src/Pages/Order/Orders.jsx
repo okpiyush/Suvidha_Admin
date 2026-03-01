@@ -7,6 +7,8 @@ import Loading from '../../Components/Loading/Loading';
 import ConfirmationModal from '../../Components/Modals/confirmationModal';
 import axios from 'axios';
 
+import { API_BASE_URL } from '../../config';
+
 const PageContainer = styled.div`
   max-width: 1400px;
   margin: 0 auto;
@@ -103,7 +105,7 @@ const ActionBtn = styled.button`
 `;
 
 const Orders = () => {
-  const url = 'https://businessmanagementsolutionapi.onrender.com/api/order/';
+  const url = `${API_BASE_URL}/order/`;
   const { loginData } = useContext(LoginContext);
   const [data, setData] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -127,7 +129,7 @@ const Orders = () => {
   const confirmDelete = async () => {
     if (!itemToDelete) return;
     try {
-      await axios.delete(`https://businessmanagementsolutionapi.onrender.com/api/order/${itemToDelete._id}`, {
+      await axios.delete(`${API_BASE_URL}/order/${itemToDelete._id}`, {
         headers: { "token": `Bearer ${loginData.accessToken}` }
       });
       setData(data.filter(item => item._id !== itemToDelete._id));
@@ -139,7 +141,7 @@ const Orders = () => {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      await axios.put(`https://businessmanagementsolutionapi.onrender.com/api/order/${orderId}`,
+      await axios.put(`${API_BASE_URL}/order/${orderId}`,
         { status: newStatus },
         { headers: { "token": `Bearer ${loginData.accessToken}` } }
       );

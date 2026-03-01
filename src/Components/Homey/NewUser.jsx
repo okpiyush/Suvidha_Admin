@@ -104,7 +104,7 @@ const ViewButton = styled(Link)`
 
 const NewUser = () => {
   const { loginData } = useContext(LoginContext);
-  const url = "https://businessmanagementsolutionapi.onrender.com/api/users?new=true";
+  const url = "http://localhost:5005/api/users?new=true";
   const users = useHook(url, loginData?.accessToken);
 
   const displayUsers = users || [];

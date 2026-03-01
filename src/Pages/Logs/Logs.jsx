@@ -119,7 +119,7 @@ const ModalContent = styled.div`
 `;
 
 const Logs = () => {
-  const url = 'https://businessmanagementsolutionapi.onrender.com/api/auth/getallip';
+  const url = 'http://localhost:5005/api/auth/getallip';
   const { loginData } = useContext(LoginContext);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);

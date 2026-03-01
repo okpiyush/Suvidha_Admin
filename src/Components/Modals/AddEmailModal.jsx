@@ -132,7 +132,7 @@ const AddEmailModal = ({ onSuccess, onUpdate }) => {
         };
 
         const headers = { "token": `Bearer ${loginData.accessToken}` };
-        const url = "https://businessmanagementsolutionapi.onrender.com/api/mail/bulkmail";
+        const url = "http://localhost:5005/api/mail/bulkmail";
 
         try {
             await axios.post(url, payload, { headers });

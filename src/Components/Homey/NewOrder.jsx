@@ -126,7 +126,7 @@ const ViewAllButton = styled(Link)`
 
 const NewOrder = () => {
   const { loginData } = useContext(LoginContext);
-  const url = "https://businessmanagementsolutionapi.onrender.com/api/order?new=true";
+  const url = "http://localhost:5005/api/order?new=true";
   const orders = useHook(url, loginData?.accessToken);
 
   const displayOrders = orders || [];

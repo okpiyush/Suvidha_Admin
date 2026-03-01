@@ -71,9 +71,9 @@ const Summary = () => {
     const { loginData } = useContext(LoginContext);
 
     // Fetch individual stats
-    const usersData = useHook("https://businessmanagementsolutionapi.onrender.com/api/users", loginData?.accessToken);
-    const productsData = useHook("https://businessmanagementsolutionapi.onrender.com/api/products/", loginData?.accessToken);
-    const ordersData = useHook("https://businessmanagementsolutionapi.onrender.com/api/order/", loginData?.accessToken);
+    const usersData = useHook("http://localhost:5005/api/users", loginData?.accessToken);
+    const productsData = useHook("http://localhost:5005/api/products/", loginData?.accessToken);
+    const ordersData = useHook("http://localhost:5005/api/order/", loginData?.accessToken);
 
     const stats = [
         {
