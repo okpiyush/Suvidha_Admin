@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { LoginContext } from '../../Context/LoginContext';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 
 const ModalHeader = styled.div`
   margin-bottom: 2rem;
@@ -103,103 +104,103 @@ const SubmitBtn = styled.button`
 `;
 
 const AddEmailModal = ({ onSuccess, onUpdate }) => {
-    const { loginData } = useContext(LoginContext);
-    const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        name: '',
-        designation: '',
-        subject: '',
-        desc: ''
-    });
+  const { loginData } = useContext(LoginContext);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    designation: '',
+    subject: '',
+    desc: ''
+  });
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.name || !formData.designation || !formData.subject || !formData.desc) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    setLoading(true);
+    const payload = {
+      name: formData.name,
+      desig: formData.designation,
+      subject: formData.subject,
+      body: formData.desc
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!formData.name || !formData.designation || !formData.subject || !formData.desc) {
-            alert("Please fill all required fields");
-            return;
-        }
+    const headers = { "token": `Bearer ${loginData.accessToken}` };
+    const url = `${API_BASE_URL}/mail/bulkmail`;
 
-        setLoading(true);
-        const payload = {
-            name: formData.name,
-            desig: formData.designation,
-            subject: formData.subject,
-            body: formData.desc
-        };
+    try {
+      await axios.post(url, payload, { headers });
+      if (onUpdate) onUpdate();
+      onSuccess();
+    } catch (err) {
+      console.error("Bulk email error:", err);
+      alert("Failed to send bulk email. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        const headers = { "token": `Bearer ${loginData.accessToken}` };
-        const url = "http://localhost:5005/api/mail/bulkmail";
-
-        try {
-            await axios.post(url, payload, { headers });
-            if (onUpdate) onUpdate();
-            onSuccess();
-        } catch (err) {
-            console.error("Bulk email error:", err);
-            alert("Failed to send bulk email. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return (
-        <div>
-            <ModalHeader>
-                <h2>Broadcast Email</h2>
-                <p>Send a global notification to all subscribers</p>
-            </ModalHeader>
-            <Form onSubmit={handleSubmit}>
-                <FormGroup>
-                    <Label>Sender Name</Label>
-                    <Input
-                        name="name"
-                        placeholder="e.g. Admin Team"
-                        value={formData.name}
-                        onChange={handleChange}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label>Designation</Label>
-                    <Input
-                        name="designation"
-                        placeholder="e.g. Operations Manager"
-                        value={formData.designation}
-                        onChange={handleChange}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label>Email Subject</Label>
-                    <Input
-                        name="subject"
-                        placeholder="Important Update Regarding..."
-                        value={formData.subject}
-                        onChange={handleChange}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label>Email Content</Label>
-                    <Textarea
-                        name="desc"
-                        placeholder="Write your message here..."
-                        value={formData.desc}
-                        onChange={handleChange}
-                    />
-                </FormGroup>
-                <SubmitBtn type="submit" disabled={loading}>
-                    {loading ? (
-                        <i className='bx bx-loader-alt bx-spin'></i>
-                    ) : (
-                        <i className='bx bx-send'></i>
-                    )}
-                    {loading ? 'Sending...' : 'Send Broadcast'}
-                </SubmitBtn>
-            </Form>
-        </div>
-    );
+  return (
+    <div>
+      <ModalHeader>
+        <h2>Broadcast Email</h2>
+        <p>Send a global notification to all subscribers</p>
+      </ModalHeader>
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label>Sender Name</Label>
+          <Input
+            name="name"
+            placeholder="e.g. Admin Team"
+            value={formData.name}
+            onChange={handleChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Designation</Label>
+          <Input
+            name="designation"
+            placeholder="e.g. Operations Manager"
+            value={formData.designation}
+            onChange={handleChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Email Subject</Label>
+          <Input
+            name="subject"
+            placeholder="Important Update Regarding..."
+            value={formData.subject}
+            onChange={handleChange}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Email Content</Label>
+          <Textarea
+            name="desc"
+            placeholder="Write your message here..."
+            value={formData.desc}
+            onChange={handleChange}
+          />
+        </FormGroup>
+        <SubmitBtn type="submit" disabled={loading}>
+          {loading ? (
+            <i className='bx bx-loader-alt bx-spin'></i>
+          ) : (
+            <i className='bx bx-send'></i>
+          )}
+          {loading ? 'Sending...' : 'Send Broadcast'}
+        </SubmitBtn>
+      </Form>
+    </div>
+  );
 };
 
 export default AddEmailModal;

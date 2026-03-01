@@ -2,14 +2,16 @@ import React from 'react';
 import styled from "styled-components";
 import io from 'socket.io-client';
 import { useEffect } from 'react';
-const Div=styled.div`
+import { API_BASE_URL } from '../../config';
+
+const Div = styled.div`
     padding-top:60px;
     display:flex;
     width:100vw;
     height:99.8vh;
     overflow:hidden;
 `
-const Nav=styled.div`
+const Nav = styled.div`
     flex:1;
     height:inherit;
     background-color:rgb(107, 60, 192);
@@ -31,12 +33,12 @@ const Nav=styled.div`
         background-color: #555;
     }
 `
-const Users=styled.ul`
+const Users = styled.ul`
     height:inherit;
     list-style-type:none;
     background-color:rgb(107, 60, 192);
 `
-const UserLi=styled.li`
+const UserLi = styled.li`
     width:90%;
     height:40px;
     text-align:center;
@@ -47,19 +49,19 @@ const UserLi=styled.li`
         background-color:rgb(158, 71, 207);
     }
 `
-const ChatWindow=styled.div`
+const ChatWindow = styled.div`
     flex:4;
     height:93vh;
     background-color:rgb(119, 71, 207);
     width:800px;
 
 `
-const Form=styled.form`
+const Form = styled.form`
     width:100%;
     display:flex;
     
 `
-const Input=styled.input`
+const Input = styled.input`
     flex:10;
     height:40px;
     margin:5px;
@@ -67,7 +69,7 @@ const Input=styled.input`
     border-radius:8px;
     padding-left:10px;
 `
-const Button=styled.button`
+const Button = styled.button`
     flex:1;
     height:40px;
     margin:5px;
@@ -75,7 +77,7 @@ const Button=styled.button`
     border-radius:8px;
     padding-left:10px;
 `
-const ChatSize= styled.div`
+const ChatSize = styled.div`
     height:88%;
     
     ::-webkit-scrollbar {
@@ -96,26 +98,26 @@ const ChatSize= styled.div`
     }
     overflow-y:auto;
 `
-const ChatDiv=styled.div`
+const ChatDiv = styled.div`
     font-weight:700;
     display:flex;
-    justify-content:${props=>props.self==="false"?"flex-start":"flex-end"}
+    justify-content:${props => props.self === "false" ? "flex-start" : "flex-end"}
 `
-const ChatText=styled.div`
+const ChatText = styled.div`
     width:50%;
     padding:10px 10px 10px 30px;
     border-radius:10px;
     background-color:RGB(178, 211, 119); 
     margin:20px;
 `
-const Text=styled.div`
+const Text = styled.div`
 `
-const Time=styled.div`
+const Time = styled.div`
     width:100%;
     text-align:right;
     font-size:12px;
 `
-const Title=styled.div`
+const Title = styled.div`
     width:100%;
     text-align:center;
     font-size:25px;
@@ -123,7 +125,7 @@ const Title=styled.div`
     color:white;
     margin-bottom:30px;
 `
-const ChatTitle=styled.div`
+const ChatTitle = styled.div`
     width:100%;
     posistion:absolute;
     z-index:2;
@@ -140,46 +142,46 @@ const ChatTitle=styled.div`
 const Chat = () => {
     useEffect(() => {
         //when the state mounts it gets executed
-        const socket = io.connect("http://localhost:3002");
+        const socket = io.connect(API_BASE_URL.replace("/api", ""));
         //when it unmounts then it disconnect
         return () => {
-          socket.disconnect();
+            socket.disconnect();
         };
-      }, []);
-  return (
-    <Div>
-        <Nav>
-            
-            <Title>Customers</Title>
-            <Users >
-                
-            </Users>
-        </Nav>
-        <ChatWindow>
-            <ChatTitle>
-                Anurag
-            </ChatTitle>
-            <ChatSize>
-                <ChatDiv self="false">
-                    <ChatText>
-                        <Text>Hey</Text>
-                        <Time>10:20pm</Time>
-                    </ChatText>
-                </ChatDiv>
-                <ChatDiv self="true">
-                    <ChatText>
-                        <Text>Hey</Text>
-                        <Time>10:20pm</Time>
-                    </ChatText>
-                </ChatDiv>
-            </ChatSize>
-            <Form>
-                <Input placeholder='Type your message here'/>
-                <Button>Send</Button>
-            </Form>
-        </ChatWindow>
-    </Div>
-  )
+    }, []);
+    return (
+        <Div>
+            <Nav>
+
+                <Title>Customers</Title>
+                <Users >
+
+                </Users>
+            </Nav>
+            <ChatWindow>
+                <ChatTitle>
+                    Anurag
+                </ChatTitle>
+                <ChatSize>
+                    <ChatDiv self="false">
+                        <ChatText>
+                            <Text>Hey</Text>
+                            <Time>10:20pm</Time>
+                        </ChatText>
+                    </ChatDiv>
+                    <ChatDiv self="true">
+                        <ChatText>
+                            <Text>Hey</Text>
+                            <Time>10:20pm</Time>
+                        </ChatText>
+                    </ChatDiv>
+                </ChatSize>
+                <Form>
+                    <Input placeholder='Type your message here' />
+                    <Button>Send</Button>
+                </Form>
+            </ChatWindow>
+        </Div>
+    )
 }
 
 export default Chat

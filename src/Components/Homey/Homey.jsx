@@ -51,8 +51,8 @@ const Homey = () => {
   const { loginData } = useContext(LoginContext);
 
   // Data URLs
-  const userStatsUrl = "http://localhost:5005/api/users/stats";
-  const productStatsUrl = "http://localhost:5005/api/products/stats";
+  const userStatsUrl = `${API_BASE_URL}/users/stats`;
+  const productStatsUrl = `${API_BASE_URL}/products/stats`;
 
   // Fetch data
   const userStats = useHook(userStatsUrl, loginData?.accessToken);

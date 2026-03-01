@@ -105,7 +105,7 @@ const ViewButton = styled(Link)`
 
 const NewUser = () => {
   const { loginData } = useContext(LoginContext);
-  const url = "http://localhost:5005/api/users?new=true";
+  const url = `${API_BASE_URL}/users?new=true`;
   const users = useHook(url, loginData?.accessToken);
 
   const displayUsers = users || [];

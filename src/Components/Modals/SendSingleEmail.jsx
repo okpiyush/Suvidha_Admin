@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { LoginContext } from '../../Context/LoginContext';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 
 const ModalHeader = styled.div`
   margin-bottom: 2rem;
@@ -111,122 +112,122 @@ const SubmitBtn = styled.button`
 `;
 
 const SendSingleEmail = ({ email, onSuccess, onUpdate }) => {
-    const { loginData } = useContext(LoginContext);
-    const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        designation: '',
-        subject: '',
-        desc: ''
-    });
+  const { loginData } = useContext(LoginContext);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    designation: '',
+    subject: '',
+    desc: ''
+  });
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.designation || !formData.subject || !formData.desc) {
+      alert("Please fill all required fields");
+      return;
+    }
+    if (formData.subject.length <= 5) {
+      alert("Subject must be longer than 5 characters");
+      return;
+    }
+    if (formData.desc.length <= 50) {
+      alert("Email body must be longer than 50 characters");
+      return;
+    }
+
+    setLoading(true);
+    const payload = {
+      email: email,
+      name: loginData.username.toUpperCase(),
+      desig: formData.designation,
+      subject: formData.subject,
+      body: formData.desc
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!formData.designation || !formData.subject || !formData.desc) {
-            alert("Please fill all required fields");
-            return;
-        }
-        if (formData.subject.length <= 5) {
-            alert("Subject must be longer than 5 characters");
-            return;
-        }
-        if (formData.desc.length <= 50) {
-            alert("Email body must be longer than 50 characters");
-            return;
-        }
+    const headers = { "token": `Bearer ${loginData.accessToken}` };
+    const url = `${API_BASE_URL}/mail/sendmail`;
 
-        setLoading(true);
-        const payload = {
-            email: email,
-            name: loginData.username.toUpperCase(),
-            desig: formData.designation,
-            subject: formData.subject,
-            body: formData.desc
-        };
+    try {
+      await axios.post(url, payload, { headers });
+      if (onUpdate) onUpdate();
+      onSuccess();
+    } catch (err) {
+      console.error("Single email error:", err);
+      alert("Failed to send email. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        const headers = { "token": `Bearer ${loginData.accessToken}` };
-        const url = "http://localhost:5005/api/mail/sendmail";
+  return (
+    <div>
+      <ModalHeader>
+        <h2>Contact Subscriber</h2>
+        <p>Send a direct message to {email}</p>
+      </ModalHeader>
 
-        try {
-            await axios.post(url, payload, { headers });
-            if (onUpdate) onUpdate();
-            onSuccess();
-        } catch (err) {
-            console.error("Single email error:", err);
-            alert("Failed to send email. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return (
-        <div>
-            <ModalHeader>
-                <h2>Contact Subscriber</h2>
-                <p>Send a direct message to {email}</p>
-            </ModalHeader>
-
-            <Form onSubmit={handleSubmit}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <FormGroup>
-                        <Label>Recipient</Label>
-                        <Input value={email} disabled />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label>Sender</Label>
-                        <Input value={loginData.username.toUpperCase()} disabled />
-                    </FormGroup>
-                </div>
-
-                <FormGroup>
-                    <Label>Your Designation</Label>
-                    <Input
-                        name="designation"
-                        placeholder="e.g. Account Manager"
-                        value={formData.designation}
-                        onChange={handleChange}
-                        required
-                    />
-                </FormGroup>
-
-                <FormGroup>
-                    <Label>Subject Line</Label>
-                    <Input
-                        name="subject"
-                        placeholder="Concise and clear subject"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        required
-                    />
-                    <Hint><i className='bx bx-info-circle'></i> Minimum 6 characters</Hint>
-                </FormGroup>
-
-                <FormGroup>
-                    <Label>Message Content</Label>
-                    <Textarea
-                        name="desc"
-                        placeholder="Write your professional message here..."
-                        value={formData.desc}
-                        onChange={handleChange}
-                        required
-                    />
-                    <Hint><i className='bx bx-info-circle'></i> Minimum 51 characters ({formData.desc.length}/50)</Hint>
-                </FormGroup>
-
-                <SubmitBtn type="submit" disabled={loading}>
-                    {loading ? (
-                        <i className='bx bx-loader-alt bx-spin'></i>
-                    ) : (
-                        <i className='bx bx-paper-plane'></i>
-                    )}
-                    {loading ? 'Sending Message...' : 'Send Message Now'}
-                </SubmitBtn>
-            </Form>
+      <Form onSubmit={handleSubmit}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <FormGroup>
+            <Label>Recipient</Label>
+            <Input value={email} disabled />
+          </FormGroup>
+          <FormGroup>
+            <Label>Sender</Label>
+            <Input value={loginData.username.toUpperCase()} disabled />
+          </FormGroup>
         </div>
-    );
+
+        <FormGroup>
+          <Label>Your Designation</Label>
+          <Input
+            name="designation"
+            placeholder="e.g. Account Manager"
+            value={formData.designation}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <Label>Subject Line</Label>
+          <Input
+            name="subject"
+            placeholder="Concise and clear subject"
+            value={formData.subject}
+            onChange={handleChange}
+            required
+          />
+          <Hint><i className='bx bx-info-circle'></i> Minimum 6 characters</Hint>
+        </FormGroup>
+
+        <FormGroup>
+          <Label>Message Content</Label>
+          <Textarea
+            name="desc"
+            placeholder="Write your professional message here..."
+            value={formData.desc}
+            onChange={handleChange}
+            required
+          />
+          <Hint><i className='bx bx-info-circle'></i> Minimum 51 characters ({formData.desc.length}/50)</Hint>
+        </FormGroup>
+
+        <SubmitBtn type="submit" disabled={loading}>
+          {loading ? (
+            <i className='bx bx-loader-alt bx-spin'></i>
+          ) : (
+            <i className='bx bx-paper-plane'></i>
+          )}
+          {loading ? 'Sending Message...' : 'Send Message Now'}
+        </SubmitBtn>
+      </Form>
+    </div>
+  );
 };
 
 export default SendSingleEmail;

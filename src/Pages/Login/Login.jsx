@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { LoginContext } from '../../Context/LoginContext';
 import Loading from '../../Components/Loading/Loading';
+import { API_BASE_URL } from '../../config';
 
 const PageContainer = styled.div`
   display: flex;
@@ -208,7 +209,7 @@ const Login = () => {
     try {
       // For presentation/demo, we can allow admin/admin if the API is not reachable
       // But let's try the real API first
-      const response = await axios.post(`http://localhost:5005/api/auth/login`, {
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
         username,
         password
       }).catch(err => {

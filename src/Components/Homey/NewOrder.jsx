@@ -127,7 +127,7 @@ const ViewAllButton = styled(Link)`
 
 const NewOrder = () => {
   const { loginData } = useContext(LoginContext);
-  const url = "http://localhost:5005/api/order?new=true";
+  const url = `${API_BASE_URL}/order?new=true`;
   const orders = useHook(url, loginData?.accessToken);
 
   const displayOrders = orders || [];

@@ -238,7 +238,7 @@ const Welcome = () => {
       <SidePanel className="left">
         <ContentBox>
           <h2 style={{ color: 'white', fontSize: '1rem', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.4em' }}>Customer Portal</h2>
-          <PortalButton as="a" href="http://localhost:3000">Shop Now</PortalButton>
+          <PortalButton as="a" href={process.env.REACT_APP_STORE_URL || "http://localhost:3000"}>Shop Now</PortalButton>
           <ExtraText>Explore our premium e-commerce experience</ExtraText>
         </ContentBox>
       </SidePanel>

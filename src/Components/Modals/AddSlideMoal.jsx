@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { LoginContext } from '../../Context/LoginContext';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 
 const ModalHeader = styled.div`
   margin-bottom: 2rem;
@@ -205,7 +206,7 @@ const AddSlideModal = ({ onSuccess, onUpdate }) => {
 
   const handleCreate = async () => {
     setLoading(true);
-    const url = "http://localhost:5005/api/slideshow/";
+    const url = `${API_BASE_URL}/slideshow/`;
     const headers = { "token": `Bearer ${loginData.accessToken}` };
 
     try {

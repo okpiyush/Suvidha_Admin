@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { LoginContext } from '../../Context/LoginContext';
 import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }
@@ -162,164 +163,164 @@ const ImagePreview = styled.div`
 `;
 
 const AddProductModal = ({ onSuccess, onUpdate }) => {
-    const { loginData } = useContext(LoginContext);
-    const [loading, setLoading] = useState(false);
-    const [imageError, setImageError] = useState(false);
-    const [error, setError] = useState(null);
-    const [formData, setFormData] = useState({
-        name: '',
-        price: '',
-        categories: '',
-        img: '',
-        size: '',
-        desc: ''
-    });
+  const { loginData } = useContext(LoginContext);
+  const [loading, setLoading] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    price: '',
+    categories: '',
+    img: '',
+    size: '',
+    desc: ''
+  });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        if (name === 'img') setImageError(false);
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'img') setImageError(false);
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    // Validation
+    if (!formData.name || !formData.price || !formData.img || !formData.categories) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    setLoading(true);
+
+    const payload = {
+      title: formData.name,
+      desc: formData.desc,
+      categories: formData.categories.split(/[ ,]+/).filter(Boolean),
+      size: formData.size,
+      img: formData.img,
+      price: Number(formData.price),
+      featured: true
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError(null);
-
-        // Validation
-        if (!formData.name || !formData.price || !formData.img || !formData.categories) {
-            setError("Please fill in all required fields.");
-            return;
-        }
-
-        setLoading(true);
-
-        const payload = {
-            title: formData.name,
-            desc: formData.desc,
-            categories: formData.categories.split(/[ ,]+/).filter(Boolean),
-            size: formData.size,
-            img: formData.img,
-            price: Number(formData.price),
-            featured: true
-        };
-
-        const headers = {
-            token: `Bearer ${loginData.accessToken}`
-        };
-
-        const url = "http://localhost:5005/api/products/";
-
-        try {
-            const response = await axios.post(url, payload, { headers });
-            if (onUpdate) onUpdate(response.data);
-            onSuccess();
-        } catch (err) {
-            console.error(err);
-            setError("Failed to add product. Please check the information and try again.");
-        } finally {
-            setLoading(false);
-        }
+    const headers = {
+      token: `Bearer ${loginData.accessToken}`
     };
 
-    return (
-        <FormContainer>
-            <h2>Add New Product</h2>
+    const url = `${API_BASE_URL}/products/`;
 
-            <Form onSubmit={handleSubmit}>
-                <ImagePreview>
-                    {formData.img && !imageError ? (
-                        <img
-                            src={formData.img}
-                            alt="Preview"
-                            onError={() => setImageError(true)}
-                        />
-                    ) : (
-                        <div className="placeholder">
-                            <i className='bx bx-image-add' style={{ fontSize: '3rem' }}></i>
-                            {imageError ? 'Invalid image URL' : 'Image Preview'}
-                        </div>
-                    )}
-                </ImagePreview>
+    try {
+      const response = await axios.post(url, payload, { headers });
+      if (onUpdate) onUpdate(response.data);
+      onSuccess();
+    } catch (err) {
+      console.error(err);
+      setError("Failed to add product. Please check the information and try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                <FormGroup>
-                    <label htmlFor="name">Product Title*</label>
-                    <Input
-                        id="name"
-                        name="name"
-                        placeholder="e.g. Classic Denim Jacket"
-                        value={formData.name}
-                        onChange={handleChange}
-                    />
-                </FormGroup>
+  return (
+    <FormContainer>
+      <h2>Add New Product</h2>
 
-                <FormGroup>
-                    <label htmlFor="price">Price (₹)*</label>
-                    <Input
-                        id="price"
-                        name="price"
-                        type="number"
-                        placeholder="e.g. 1999"
-                        value={formData.price}
-                        onChange={handleChange}
-                    />
-                </FormGroup>
+      <Form onSubmit={handleSubmit}>
+        <ImagePreview>
+          {formData.img && !imageError ? (
+            <img
+              src={formData.img}
+              alt="Preview"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <div className="placeholder">
+              <i className='bx bx-image-add' style={{ fontSize: '3rem' }}></i>
+              {imageError ? 'Invalid image URL' : 'Image Preview'}
+            </div>
+          )}
+        </ImagePreview>
 
-                <FormGroup fullWidth>
-                    <label htmlFor="img">Image URL*</label>
-                    <Input
-                        id="img"
-                        name="img"
-                        placeholder="e.g. https://images.unsplash.com/photo-..."
-                        value={formData.img}
-                        onChange={handleChange}
-                    />
-                </FormGroup>
+        <FormGroup>
+          <label htmlFor="name">Product Title*</label>
+          <Input
+            id="name"
+            name="name"
+            placeholder="e.g. Classic Denim Jacket"
+            value={formData.name}
+            onChange={handleChange}
+          />
+        </FormGroup>
 
-                <FormGroup>
-                    <label htmlFor="categories">Categories (comma or space separated)*</label>
-                    <Input
-                        id="categories"
-                        name="categories"
-                        placeholder="e.g. Men Outerwear Denim"
-                        value={formData.categories}
-                        onChange={handleChange}
-                    />
-                </FormGroup>
+        <FormGroup>
+          <label htmlFor="price">Price (₹)*</label>
+          <Input
+            id="price"
+            name="price"
+            type="number"
+            placeholder="e.g. 1999"
+            value={formData.price}
+            onChange={handleChange}
+          />
+        </FormGroup>
 
-                <FormGroup>
-                    <label htmlFor="size">Size</label>
-                    <Input
-                        id="size"
-                        name="size"
-                        placeholder="e.g. S, M, L, XL"
-                        value={formData.size}
-                        onChange={handleChange}
-                    />
-                </FormGroup>
+        <FormGroup fullWidth>
+          <label htmlFor="img">Image URL*</label>
+          <Input
+            id="img"
+            name="img"
+            placeholder="e.g. https://images.unsplash.com/photo-..."
+            value={formData.img}
+            onChange={handleChange}
+          />
+        </FormGroup>
 
-                <FormGroup fullWidth>
-                    <label htmlFor="desc">Description</label>
-                    <Textarea
-                        id="desc"
-                        name="desc"
-                        placeholder="Provide a detailed description of the product..."
-                        value={formData.desc}
-                        onChange={handleChange}
-                    />
-                </FormGroup>
+        <FormGroup>
+          <label htmlFor="categories">Categories (comma or space separated)*</label>
+          <Input
+            id="categories"
+            name="categories"
+            placeholder="e.g. Men Outerwear Denim"
+            value={formData.categories}
+            onChange={handleChange}
+          />
+        </FormGroup>
 
-                {error && <Message type="error">{error}</Message>}
+        <FormGroup>
+          <label htmlFor="size">Size</label>
+          <Input
+            id="size"
+            name="size"
+            placeholder="e.g. S, M, L, XL"
+            value={formData.size}
+            onChange={handleChange}
+          />
+        </FormGroup>
 
-                <SubmitButton type="submit" disabled={loading}>
-                    {loading ? <Loader /> : <i className='bx bx-check-double'></i>}
-                    {loading ? 'Creating Product...' : 'Create Product'}
-                </SubmitButton>
-            </Form>
-        </FormContainer>
-    );
+        <FormGroup fullWidth>
+          <label htmlFor="desc">Description</label>
+          <Textarea
+            id="desc"
+            name="desc"
+            placeholder="Provide a detailed description of the product..."
+            value={formData.desc}
+            onChange={handleChange}
+          />
+        </FormGroup>
+
+        {error && <Message type="error">{error}</Message>}
+
+        <SubmitButton type="submit" disabled={loading}>
+          {loading ? <Loader /> : <i className='bx bx-check-double'></i>}
+          {loading ? 'Creating Product...' : 'Create Product'}
+        </SubmitButton>
+      </Form>
+    </FormContainer>
+  );
 };
 
 export default AddProductModal;
